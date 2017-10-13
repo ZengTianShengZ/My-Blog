@@ -20,7 +20,6 @@ var Module = (function($){
     var foo = function(){
         console.log(_$body);    // 特权方法
     }
-
     // Revelation Pattern
     return {
         foo: foo
@@ -54,3 +53,5 @@ Module.foo();
 ```
 项目脚本的加载，弊端是
 难以维护，需要顺序执行，依赖模糊，请求过多
+
+### 2、模块时代的到来
