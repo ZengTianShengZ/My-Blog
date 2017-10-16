@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CMD 规范</title>
+</head>
+<body>
+<p id="j_ptext">CMD 规范</p>
+
+<script src="./lib/sea.js"></script>
+<script type="text/javascript">
+    // seajs 的简单配置
+    seajs.config({
+        base: "./",
+        alias: {
+            "jquery": "lib/jquery.min.js"
+        }
+    })
+    // 加载入口模块
+    seajs.use("./main")
+</script>
+</body>
+</html>
