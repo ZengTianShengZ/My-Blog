@@ -1,5 +1,5 @@
 /**
- * @description: math 模块
+ * @description: module-amd
  * @author: zengtiansheng
  * @update: 2017/10/16
  */
