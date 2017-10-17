@@ -80,7 +80,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;
         return x + y;
     };
     // 或者通过 module.exports 提供整个接口
-    module.exports = add;
+    module.exports = { add: add };
 }.call(exports, __webpack_require__, exports, module),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
@@ -114,10 +114,15 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @author: zengtiansheng
  * @update: 2017/10/17
  */
-console.log(_module_amd2.default);
-console.log(_module_cmd2.default);
-console.log(_module_commonjs2.default);
-console.log(_module_es2.default);
+console.log(_module_amd2.default); // object
+console.log(_module_cmd2.default); // object
+console.log(_module_commonjs2.default); // object
+console.log(_module_es2.default); // object
+
+console.log(_module_amd2.default.add(11, 22));
+console.log(_module_cmd2.default.add(11, 22));
+console.log(_module_commonjs2.default.add(11, 22));
+console.log(_module_es2.default.add(11, 22));
 
 console.log('.....app.js.......');
 
@@ -164,7 +169,7 @@ var add = function add(x, y) {
     * @update: 2017/10/16
     */
 
-module.exports = add;
+exports.add = add;
 
 /***/ }),
 /* 4 */

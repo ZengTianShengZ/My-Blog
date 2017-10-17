@@ -8,5 +8,5 @@ define(function(require, exports, module) {
         return x+y;
     };
     // 或者通过 module.exports 提供整个接口
-    module.exports = add
+    module.exports = {add}
 });

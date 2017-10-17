@@ -294,6 +294,7 @@ but ，，模块太先进了，浏览器不支持 😢 ， 好在有了 bable �
 
 ### 送你上天 ：webpack 模块打包器(module bundler)
 
+#### (1)、基础
 webpack 的基础配置就不写了，可以稍微看一下经过下面 loader 处理后文件的输出情况
 ```
 test: /\.js$/,
@@ -330,3 +331,61 @@ console.log('.....app.js.......');
 ])
 ```
 将模块打包成一个 function ，再利用 js 立即执行函数 去执行 function模块
+
+#### （2）、打包各种规范模块
+
+用 webpack 分别打包 AMD 、CMD 、commonjs 和 es6 方式 export 出的模块
+
+下面只是代码片段，例子请看项目 `/前端模块化/Webpack/demo1`
+```
+import amd from './src/module_amd'
+import cmd from './src/module_cmd'
+import commonjs from './src/module_commonjs'
+import es6 from './src/module_es6'
+
+console.log(amd)        // object
+console.log(cmd)        // object
+console.log(commonjs)   // object
+console.log(es6)        // object
+
+amd.add(11,22)        //33
+cmd.add(11,22)        //33
+commonjs.add(11,22)   //33
+es6.add(11,22)        //33
+```
+看出无论用哪种方式定义模块，都能利用 import 进行模块的引入，这得力于 bable-loader，让
+我们在写代码时统一了规范
+
+#### （3）、对模块进行提取 CommonsChunkPlugin
+- 情况1
+```
+entry: {
+     app: './app.js'
+},
+
+new webpack.optimize.CommonsChunkPlugin({
+     name: 'vendor',       // 上面 entry 入口定义的节点组
+     filename:'vendor.js'  //最后生成的文件名，随意
+}),
+```
+当 webpack 的 entry 入口只有一个文件的时候，利用 CommonsChunkPlugin 提取出的只是
+webpack的运行文件
+
+- 情况2
+```
+entry: {
+     app: './app.js',
+     vendor: ['./src/a.js'] // 指定公共模块
+},
+
+new webpack.optimize.CommonsChunkPlugin({
+     name: 'vendor',       // 上面 entry 入口定义的节点组
+     filename:'vendor.js'  //最后生成的文件名，随意
+}),
+```
+当 webpack 的 entry 入口有多个时，CommonsChunkPlugin 的 name 参数指向 entry 对应的 key，
+key 指向的文件会被全局提出出来，并和`webpack的运行文件`打成一个 vendor 包
+
+更多情况可点击下面链接 (链接)['https://segmentfault.com/q/1010000009070061/a-1020000009073036']
+
+

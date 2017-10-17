@@ -8,4 +8,4 @@ import module_cmd from "./module_cmd";
 const add = function (x,y){
     return x+y;
 };
-module.exports = add
+exports.add = add
