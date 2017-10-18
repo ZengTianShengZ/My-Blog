@@ -15,11 +15,11 @@ module.exports = {
                 test: /\.js$/,
                 use: {
                     loader: "babel-loader",
-                    options: {
-                        presets: [
-                            "es2015"
-                        ]
-                    }
+                    // options: {  // 此处配置可以写到 .babelrc 文件下
+                    //     presets: [
+                    //         "es2015"
+                    //     ]
+                    // }
                 },
                 exclude: /node_modules/
             }
@@ -36,7 +36,6 @@ module.exports = {
         // webpack的运行文件会先 找 上面 entry 入口定义的节点组 生成vendor.js，
         // 然后`webpack的运行文件`会被从vendor中再次抽出，
         // 生成一个manifest.js文件
-
         new webpack.optimize.CommonsChunkPlugin({
             name:['vendor','manifest'], // 上面入口定义的节点组
         }),

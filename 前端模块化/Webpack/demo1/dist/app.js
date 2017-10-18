@@ -119,6 +119,11 @@ console.log(_module_cmd2.default); // object
 console.log(_module_commonjs2.default); // object
 console.log(_module_es2.default); // object
 
+_module_amd2.default.add(11, 22); //33
+_module_cmd2.default.add(11, 22); //33
+_module_commonjs2.default.add(11, 22); //33
+_module_es2.default.add(11, 22); //33
+
 console.log(_module_amd2.default.add(11, 22));
 console.log(_module_cmd2.default.add(11, 22));
 console.log(_module_commonjs2.default.add(11, 22));

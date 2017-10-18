@@ -1,0 +1,6 @@
+{
+  "presets": [
+    "es2015",  // ES2015转码规则  babel-preset-es2015
+    "stage-2"  // ES7不同阶段语法提案的转码规则（共有4个阶段），选装一个  babel-preset-stage-2
+  ]
+}
