@@ -302,7 +302,7 @@ math.PI
 ```
 but ，，这种模块化方式太先进了，浏览器不支持 😢 ， 好在有了 bable ，配合 webpack 完美解决前端模块化
 
-### 送你上天 ：webpack 模块打包器(module bundler)
+### 6、送你上天 ：webpack 模块打包器(module bundler)
 
 #### (1)、基础
 webpack 的基础配置就不写了，可以稍微看一下经过下面 loader 处理后文件的输出情况
