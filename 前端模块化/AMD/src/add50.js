@@ -3,7 +3,8 @@
  * @author: zengtiansheng
  * @update: 2017/10/16
  */
-define(['math'],function (math){
+define(function (math){
+    console.log('......add50.....')
     var add50 = function (x){
         return math.add(x, 50)
     };

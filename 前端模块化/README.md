@@ -124,6 +124,7 @@ CommonJS 规范不适合浏览器开发， CommonJS 规范的模块加载是同�
 > main.js
 
 `require.config` 配置需要加载的模块名和对应的加载路径
+
 ```
 require.config({
     paths: {
@@ -139,6 +140,15 @@ require(['jquery','math'], function ($,math){
     $('#j_ptext').css('color','red')
 });
 ```
+其中对模块的加载和执行顺序官方有做一下解释
+
+>The RequireJS syntax for modules allows them to be loaded as fast as possible,
+ even out of order, but evaluated in the correct dependency order,
+ and since global variables are not created,
+ it makes it possible to load multiple versions of a module in a page.
+
+ 意思是模块是异步加载且不按顺序的，例如上面的 'jquery','math' 模块不必按书写顺序依次加载，但
+ 执行顺序是按书写顺序来的，也就是 'jquery','math' 模块加载完，jquery 模块先执行
 
 > math.js
 
@@ -460,7 +470,7 @@ transform-regenerator // 编译generator函数
 的作用啦
 
 ```
-// babel 5
+// webpack 1.x
 {
   "presets": [
     "es2015",  // ES2015转码规则  babel-preset-es2015
@@ -469,10 +479,10 @@ transform-regenerator // 编译generator函数
   "plugins": ["transform-remove-console"]
 }
 ```
-不过还有一点是，上面的写法是 babel 5 的写法，现在 babel 6 的写法如下
-需要多装个npm包 `npm i babel-preset-env--save-dev`
+不过还有一点是，上面的写法是配合 webpack 1.x 的写法，现在 webpack 2.x 的写法如下
+（提醒：需要多装个npm包 `npm i babel-preset-env--save-dev`）
 ```
-// babel 6
+// webpack 2.x
 {
   "presets": [
     ["env", {
@@ -489,7 +499,7 @@ transform-regenerator // 编译generator函数
 也就是不配置 "es2015" 选项了，而是通过 env 配置，动态指定 js 转化的版本，而不是固定写死 "es2015"，
 因为有的项目不需要将 js 转化到 "es2015" 这么低的版本，而是通过你项目需要支持的浏览器版本就行，比如
 "chrome": 52 等。 `"modules": false` 意思是不使用 bable 语法对AMD、CommonJS、UMD之类的模块进行
-转化，而是用webpack已经把这个事情做了
+转化，而是用 webpack2.x 已经把这个事情做了
 
 #### （5）、Tree Shaking 对模块方法进行按需加载
 有这么一个文件

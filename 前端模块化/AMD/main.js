@@ -11,7 +11,7 @@ require.config({
     }
 });
 
-require(['jquery','math'], function ($,math){
+require(['jquery','math','jquery'], function ($,math){
     console.log('start main.js ...✈️')
 
     $('#j_ptext').css('color','red')
