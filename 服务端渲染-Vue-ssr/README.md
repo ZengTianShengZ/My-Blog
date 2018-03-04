@@ -47,24 +47,22 @@ server.listen(8080)
 项目结构示例：
 
 ```
-├── index.html
-├── main.js
-├── api
-│   └── ... # 抽取出API请求
-├── components
-│   ├── App.vue
-│   └── ...
+├── build
+│   ├── webpack.base.config.js     # 基本配置文件
+│   ├── webpack.client.config.js   # 客户端配置文件
+│   ├── webpack.server.config.js   # 服务端配置文件
 └── src
     ├── router          
-    │    └── index.js      # 路由
+    │    └── index.js              # 路由
     └── views             
-    │    ├── comp1.vue     # 组件
-    │    └── copm2.vue     # 组件
-    ├── App.vue            # 顶级 vue 组件
-    ├── app.js             # app 入口文件
-    ├──  client-entry.js          # client 的入口文件
-    ├──  index.template.html      # html 模板
-    ├──  server-entry.js          # server 的入口文件
+    │    ├── comp1.vue             # 组件
+    │    └── copm2.vue             # 组件
+    ├── App.vue                    # 顶级 vue 组件
+    ├── app.js                     # app 入口文件
+    ├──  client-entry.js           # client 的入口文件
+    ├──  index.template.html       # html 模板
+    ├──  server-entry.js           # server 的入口文件
+├──  server.js           # server 服务
 ```
 其中：
 
@@ -389,4 +387,136 @@ webpack 配置完成，其实东西也不多，都是常规配置。需要注意
 
 ##### （2）、 webpack build poj
 
-webpack 配置完成，其实东西也不多，都是
+build 代码
+
+```
+webpack --config build/webpack.client.config.js
+webpack --config build/webpack.server.config.js
+
+```
+打包后会生成一些打包文件，其中 server.config 打包后会生成 `vue-ssr-server-bundle.json` 文件，这个文件是给 `createBundleRenderer` 用的,用于服务端渲染出 html 文件
+
+```JavaScript
+const { createBundleRenderer } = require('vue-server-renderer')
+const renderer = createBundleRenderer('/path/to/vue-ssr-server-bundle.json', {
+  // ……renderer 的其他选项
+})
+```
+
+细心的你还会发现 client.config 不仅生成了一下客服端用的到 js 文件，还会生成一份 `vue-ssr-client-manifest.json` 文件,这个文件是客户端构建清单，服务端拿到这份构建清单找到一下用于初始化的js脚步或css注入到 html 一起发给浏览器。
+
+##### （3）、 服务端渲染
+
+其实上面都是准备工作，最重要的一步是将webpack构建后的资源代码给服务端用来生成 html 。我们需要用node写一个服务端应用，通过打包后的资源生成 html 并发送给浏览器
+
+server.js
+
+```javascript
+const fs = require('fs')
+const path = require('path')
+const Koa = require('koa')
+const KoaRuoter = require('koa-router')
+const serve = require('koa-static')
+const { createBundleRenderer } = require('vue-server-renderer')
+const LRU = require('lru-cache')
+
+const resolve = file => path.resolve(__dirname, file)
+const app = new Koa()
+const router = new KoaRuoter()
+const template = fs.readFileSync(resolve('./src/index.template.html'), 'utf-8')
+
+function createRenderer (bundle, options) {
+    return createBundleRenderer(
+        bundle,
+        Object.assign(options, {
+            template,
+            cache: LRU({
+                max: 1000,
+                maxAge: 1000 * 60 * 15
+            }),
+            basedir: resolve('./dist'),
+            runInNewContext: false
+        })
+    )
+}
+
+let renderer
+const bundle = require('./dist/vue-ssr-server-bundle.json')
+const clientManifest = require('./dist/vue-ssr-client-manifest.json')
+renderer = createRenderer(bundle, {
+    clientManifest
+})
+
+/**
+ * 渲染函数
+ * @param ctx
+ * @param next
+ * @returns {Promise}
+ */
+function render (ctx, next) {
+    ctx.set("Content-Type", "text/html")
+    return new Promise (function (resolve, reject) {
+        const handleError = err => {
+            if (err && err.code === 404) {
+                ctx.status = 404
+                ctx.body = '404 | Page Not Found'
+            } else {
+                ctx.status = 500
+                ctx.body = '500 | Internal Server Error'
+                console.error(`error during render : ${ctx.url}`)
+                console.error(err.stack)
+            }
+            resolve()
+        }
+        const context = {
+            title: 'Vue Ssr 2.3',
+            url: ctx.url
+        }
+        renderer.renderToString(context, (err, html) => {
+            if (err) {
+                return handleError(err)
+            }
+            console.log(html)
+            ctx.body = html
+            resolve()
+        })
+    })
+}
+
+app.use(serve('/dist', './dist', true))
+app.use(serve('/public', './public', true))
+
+router.get('*', render)
+app.use(router.routes()).use(router.allowedMethods())
+
+const port = process.env.PORT || 8089
+app.listen(port, '0.0.0.0', () => {
+    console.log(`server started at localhost:${port}`)
+})
+```
+这里我们用到了最开始 demo 用到的 `vue-server-renderer` npm 包，通过读取 `vue-ssr-server-bundle.json` 和 `vue-ssr-client-manifest.json` 文件 renderer 出 html，最后 `ctx.body = html` 发送给浏览器, 我们试着
+`console.log(html)` 出 html 看看服务端到底渲染出了何方神圣：
+
+```HTML
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <title>Vue Ssr 2.3</title>
+    <meta charset="utf-8"/>
+    <meta name="mobile-web-app-capable" content="yes"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"/>
+    <meta name="renderer" content="webkit"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"/>
+    <meta name="theme-color" content="#f60"/>
+<link rel="preload" href="/dist/manifest-56dda86c1b6ac68c0279.js" as="script"><link rel="preload" href="/dist/vendor-3504d51340141c3804a1.js" as="script"><link rel="preload" href="/dist/app-ae1871b21fa142b507e8.js" as="script"><style data-vue-ssr-id="41a1d6f9:0">
+.link {
+  margin: 10px;
+}
+</style><style data-vue-ssr-id="7add03b4:0"></style></head>
+<body>
+<div id="app" data-server-rendered="true"><h1>vue-ssr</h1><a href="/comp1" class="link router-link-exact-active router-link-active">to comp1</a><a href="/comp2" class="link">to comp2</a><section class="view">组件 1</section></div><script src="/dist/manifest-56dda86c1b6ac68c0279.js" defer></script><script src="/dit/vendor-3504d51340141c3804a1.js" defer></script><script src="/dist/app-ae1871b21fa142b507e8.js" defer></script>
+</body>
+</html>
+```
+
+可以看到服务端把路由下的 `组件 1` 也给渲染出来了，而不是让客服端去动态加载，其次是 html 也被注入了一些 <script 标签去加载对应的客户端资源。这里在多说一下，有的同学可能不理解，服务端渲染不就是最后输出 html 让浏览器渲染吗，这么 html 还带 js 脚本，注意，服务端渲染出的 html 只是首次展示给用户的页面而已，用户后期操作页面处理数据还是需要 js 脚本去跑的，也就是 webpack 为什么要打包出一套服务端代码（用于渲染首次html用），一套客户端代码（用于后期交互和数据处理用）
