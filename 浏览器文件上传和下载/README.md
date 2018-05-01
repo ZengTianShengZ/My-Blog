@@ -247,6 +247,9 @@ var objecturl =  window.URL.createObjectURL(blob);
     </section>
 ```
 
+![clipboard.png](./image/img_5.png)
+
+
 ### 1、form 表单方式
 点击页面的 `<button type="submit">submit</button>` 就实现了文件上传。
 form 表单设置了 action 上传路径 enctype 上传类型（表现在请求头中）这个在文章的最开始部分咱们也就介绍了就不多说了。
