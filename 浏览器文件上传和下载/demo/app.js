@@ -15,11 +15,10 @@ app.use(static(
 const upload = new Router()
 
 upload.get('/test', async (ctx) => {
-    ctx.body = 'test test'
+    ctx.body = 'test get'
 })
 
 upload.post('/uploadFile', async (ctx) => {
-    ctx.body = 'test post'
     // 上传文件请求处理
     let result = { success: false }
     const serverFilePath = path.join( __dirname, 'upload-files' )
@@ -85,3 +84,6 @@ app.listen(3000, () => {
 
 // koa2 
 // https://chenshenhai.github.io/koa2-note/
+
+// file 属性
+//http://www.cnblogs.com/zichi/p/html5-file-api.html
