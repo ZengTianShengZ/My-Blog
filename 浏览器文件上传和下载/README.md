@@ -1,5 +1,7 @@
 # 浏览器文件上传和下载
 
+最近项目有用到文件上传，发现对这一块内容不是很了解，所以花时间整理一份这方面的知识体系
+
 ## 一、预备知识
 ### 1、HTTP 请求和响应
 
@@ -13,50 +15,50 @@
 
 请求报文可通过一个“Accept”报文头属性告诉服务端客户端接受什么类型的响应。Accept属性的值可以为一个或多个MIME类型的值，关于MIME类型，大家请参考：http://en.wikipedia.org/wiki/MIME_type 
 
-```angular2html
-application/javascript
-application/json
-application/x-www-form-urlencodedtext/css
-text/htm
-image/pn
-multipart/form-data
+```$xslt
+Accept: application/javascript
+Accept: application/json
+Accept: application/x-www-form-urlencodedtext/css
+Accept: text/htm
+Accept: image/pn
+Accept: multipart/form-data
 // ...
 ```
 > Cookie
 
 客户端的Cookie就是通过这个报文头属性传给服务端的哦！如下所示： 
 
-```angular2html
+```$xslt
 Cookie: $Version=1; Skin=new;jsessionid=5F4771183629C9834F8382E23BE13C4C  
 ```
 >Cache-Control 
 
 对缓存进行控制，如一个请求希望响应返回的内容在客户端要被缓存一年，或不希望被缓存就可以通过这个报文头达到目的。
 
-```angular2html
+```$xslt
 Cache-Control: no-cache  // 不缓存
 Cache-Control: max-age=600  // 缓存内容将在xxx秒后失效
 ```
 
-更多请求报文属性请参考 http://en.wikipedia.org/wiki/List_of_HTTP_header_fields 
 
 > Content-Type
 
 Content-Type用于指定内容类型，一般是指网页中存在的Content-Type，Content-Type属性指定请求和响应的HTTP内容类型。如果未指定 ContentType，默认为text/html。
 常见的 Content-Type 如下：
-```angular2html
-text/html
-text/plain
-text/css
-text/javascript
-application/x-www-form-urlencoded
-multipart/form-data
-application/json
-application/xml
+```$xslt
+Content-Type: text/html
+Content-Type: text/plain
+Content-Type: text/css
+Content-Type: text/javascript
+Content-Type: application/x-www-form-urlencoded
+Content-Type: multipart/form-data
+Content-Type: application/json
+Content-Type: application/xml
 ```
-Content-Type 是重点，对我们理解数据上传，或文件上传有帮助，下面重要讲一下 Content-Type
+Content-Type 是重点，对我们理解数据上传，或文件上传有帮助，下面重点讲一下 Content-Type
 
 application/x-www-form-urlencoded
+
 application/x-www-form-urlencoded是常用的表单发包方式，普通的表单提交，或者js发包，默认都是通过这种方式
 比如一个简单的表单提交
 ```html
@@ -67,7 +69,7 @@ application/x-www-form-urlencoded是常用的表单发包方式，普通的表�
 </form>
 ```
 请求主体如下：
-```angular2html
+```$xslt
 Accept:text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
 Accept-Encoding:gzip, deflate
 Accept-Language:zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4,gl;q=0.2,de;q=0.2
@@ -80,7 +82,7 @@ Content-Type:application/x-www-form-urlencoded
 
 text/xml
 微信用的是这种数据格式发送请求的。
-```angular2html
+```$xslt
 POST http://www.homeway.me HTTP/1.1 
 Content-Type: text/xml
 <?xml version="1.0"?>
@@ -98,9 +100,10 @@ Content-Type: text/xml
 ```
 
 multipart/form-data
+
 multipart/form-data用在发送文件的POST包。
 通过控制台，可以看到发送一个文件的数据内容如下：
-```angular2html
+```$xslt
 POST http://www.homeway.me HTTP/1.1
 Content-Type:multipart/form-data; boundary=------WebKitFormBoundaryOGkWPJsSaJCPWjZP
 
@@ -118,6 +121,7 @@ Content-Disposition: form-data; name="file"; filename="index.png"
 那么--用于区分数据快，而后面的数据 WebKitFormBoundaryOGkWPJsSaJCPWjZP 就是标示区分包作用。
 
 
+更多请求报文属性请参考 http://en.wikipedia.org/wiki/List_of_HTTP_header_fields 
 
 #### 响应
 
@@ -132,7 +136,7 @@ Content-Disposition: form-data; name="file"; filename="index.png"
 
 一个代表响应服务端资源（如页面）版本的报文头属性，如果某个服务端资源发生变化了，这个ETag就会相应发生变化。它是Cache-Control的有益补充，可以让客户端“更智能”地处理什么时候要从服务端取资源，什么时候可以直接从缓存中返回响应。 
 
-```angular2html
+```$xslt
 ETag: "737060cd8c284d8af7ad3082f209582d"  
 ```
 
@@ -140,7 +144,7 @@ ETag: "737060cd8c284d8af7ad3082f209582d"
 
 服务端可以设置客户端的Cookie，其原理就是通过这个响应报文头属性实现的： 
 
-```angular2html
+```$xslt
 Set-Cookie: UserID=JohnDoe; Max-Age=3600; Version=1  
 
 ```
@@ -151,7 +155,7 @@ HTML5 添加了一些强大的 File API
 #### FileList
 FileList 对象针对表单的 file 控件。当用户通过 file 控件选取文件后，这个控件的 files 属性值就是 FileList 对象。它在结构上类似于数组，包含用户选取的多个文件。如果 file 控件没有设置 multiple 属性，那么用户只能选择一个文件，FileList 对象也就只有一个元素了。
 
-```angular2html
+```$xslt
 <input type='file' />
 <script>
     document.querySelector('input').onchange = function() {
@@ -171,9 +175,13 @@ FileList 对象针对表单的 file 控件。当用户通过 file 控件选取�
 ![clipboard.png](./image/img_3.png)
 
 name：文件名，该属性只读。
+
 size：文件大小，单位为字节，该属性只读。
+
 type：文件的 MIME 类型，如果分辨不出类型，则为空字符串，该属性只读。
+
 lastModified：文件的上次修改时间，格式为时间戳。
+
 lastModifiedDate：文件的上次修改时间，格式为 Date 对象实例。
 
 ### Blob
@@ -182,7 +190,7 @@ lastModifiedDate：文件的上次修改时间，格式为 Date 对象实例。
 Blob（Binary Large Object）对象代表了一段二进制数据，提供了一系列操作接口。其他操作二进制数据的 API（比如 File 对象），都是建立在 Blob 对象基础上的，继承了它的属性和方法。
 生成 Blob 对象有两种方法：一种是使用 Blob 构造函数，另一种是对现有的 Blob 对象使用 slice 方法切出一部分。
 
-````angular2html
+````$xslt
 var a = ["hello", "world"];
 var myBlob = new Blob(a, { "type" : "text/xml" });
 console.log(myBlob);
@@ -193,13 +201,14 @@ console.log(myBlob);
 Blob 对象有两个只读属性：
 
 size：二进制数据的大小，单位为字节。（文件上传时可以在前端判断文件大小是否合适）
+
 type：二进制数据的 MIME 类型，全部为小写，如果类型未知，则该值为空字符串。（文件上传时可以在前端判断文件类型是否合适）
 
 ### FileReader
 
 FileReader API 才是我们接下去完成一些任务的关键。FileReader API 用于读取文件，即把文件内容读入内存。它的参数是 File 对象或 Blob 对象。
 
-```angular2html
+```$xslt
 var reader = new FileReader();
 reader.abort();
 ```
@@ -208,7 +217,7 @@ reader.abort();
 
 URL 对象居然也属于File API ，我也很吃惊，不过下面的API估计我们或多或少有用过
 
-```angular2html
+```$xslt
 var objecturl =  window.URL.createObjectURL(blob);
 ```
 
@@ -222,7 +231,7 @@ var objecturl =  window.URL.createObjectURL(blob);
 我们用 form 表单和 ajax 方式来分别实现文件上传
 
 ```html
-<section>
+    <section>
         <h1>form 表单方式</h1>
         <form method="POST" action="/api/uploadFile" enctype="multipart/form-data">
             <p>file upload</p>
@@ -246,7 +255,7 @@ form 表单上传文件有个不好的地方是form 表单提交会刷新页面�
 ### 2、formData 方式
 
 ```javascript
-const file = document.querySelector('#J_file_type1').files[0]
+        const file = document.querySelector('#J_file_type1').files[0]
         const formData = new FormData()
         // 建立一个upload表单项，值为上传的文件
         formData.append('file', file)
@@ -269,7 +278,7 @@ FormData对象用以将数据编译成键值对，以便用XMLHttpRequest来发�
 ### 3、如果不使用 formData 方式呢
 如果不使用FormData对象的情况下，通过AJAX序列化和提交表单也是可以实现表单上传，不过这也太变态了，因为要自己序列化上面提到的文件上传的请求主体
 
-```angular2html
+```$xslt
 POST http://www.homeway.me HTTP/1.1
 Content-Type:multipart/form-data; boundary=------WebKitFormBoundaryOGkWPJsSaJCPWjZP
 
@@ -286,7 +295,7 @@ Content-Disposition: form-data; name="file"; filename="index.png"
 
 以上demo在[对应文章的目录下](https://github.com/ZengTianShengZ/My-Blog/tree/master/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%92%8C%E4%B8%8B%E8%BD%BD)
 
-```javascript
+```$xslt
 git clone https://github.com/ZengTianShengZ/My-Blog.git
 cd 浏览器文件上传和下载/demo/
 node app.js
