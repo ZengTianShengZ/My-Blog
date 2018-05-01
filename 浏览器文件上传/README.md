@@ -1,4 +1,4 @@
-# 浏览器文件上传和下载
+# 浏览器文件上传
 
 最近项目有用到文件上传，发现对这一块内容不是很了解，所以花时间整理一份这方面的知识体系
 
@@ -301,6 +301,7 @@ Content-Disposition: form-data; name="file"; filename="index.png"
 ```$xslt
 git clone https://github.com/ZengTianShengZ/My-Blog.git
 cd 浏览器文件上传和下载/demo/
+npm install
 node app.js
 访问 http://localhost:3000/
 
