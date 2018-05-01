@@ -300,7 +300,7 @@ Content-Disposition: form-data; name="file"; filename="index.png"
 
 ```$xslt
 git clone https://github.com/ZengTianShengZ/My-Blog.git
-cd 浏览器文件上传和下载/demo/
+cd 浏览器文件上传/demo/
 npm install
 node app.js
 访问 http://localhost:3000/
