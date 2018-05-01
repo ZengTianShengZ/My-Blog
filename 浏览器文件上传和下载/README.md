@@ -230,6 +230,9 @@ var objecturl =  window.URL.createObjectURL(blob);
 
 我们用 form 表单和 ajax 方式来分别实现文件上传
 
+![clipboard.png](./image/img_5.png)
+
+
 ```html
     <section>
         <h1>form 表单方式</h1>
@@ -246,9 +249,6 @@ var objecturl =  window.URL.createObjectURL(blob);
         <button id="J_btn_upload_type1">上传</button>
     </section>
 ```
-
-![clipboard.png](./image/img_5.png)
-
 
 ### 1、form 表单方式
 点击页面的 `<button type="submit">submit</button>` 就实现了文件上传。
