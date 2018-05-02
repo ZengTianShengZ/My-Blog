@@ -9,3 +9,6 @@
 ### 3、设计模式
 - [知识准备](https://github.com/ZengTianShengZ/My-Blog/blob/master/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/section-1%C2%B7%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86.md)
 - [一些常用的设计模式](https://github.com/ZengTianShengZ/My-Blog/blob/master/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/section-2%C2%B7%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-1.md)
+
+### 4、浏览器文件上传
+[浏览器文件上传](https://github.com/ZengTianShengZ/My-Blog/blob/master/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/README.md)
