@@ -524,3 +524,14 @@ app.listen(port, '0.0.0.0', () => {
 ### 四、小结
 
 本篇简单了解了 vue ssr 的简单流程，上面例子的demo放在对应项目根目录下，方便查看。服务端渲染还有比较重要的一部分是首屏数据的获取渲染，一般页面展示都会有一些网络数据初始化，服务端渲染可以将这些数据获取到插入到 html ，由于这部份内容涉及到的知识点也不少，放在下次讲。
+
+#### 运行项目
+
+```
+npm run install
+npm run build:client  // 生成 clientBundle
+npm run build:server  // 生成 serverBundle
+npm run dev           // 启动 node 渲染服务
+```
+
+open http://localhost:8089/
