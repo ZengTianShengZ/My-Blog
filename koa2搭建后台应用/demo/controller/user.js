@@ -24,7 +24,6 @@ export const getUser = async (ctx) => {
   }
   try {
     const resData = await userModel._findOpenId(openId)
-    console.log(resData)
     if (resData) {
       ctx.body = _successData(resData)
     } else {
