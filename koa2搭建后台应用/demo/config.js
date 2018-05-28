@@ -1,5 +1,5 @@
 const common = {
-  mongodb: 'mongodb://localhost:27017/nebula-test'
+  mongodb: 'mongodb://localhost:27017/demo'
 }
 
 const development = Object.assign(common ,{
