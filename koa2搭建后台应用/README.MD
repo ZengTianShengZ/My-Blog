@@ -275,6 +275,222 @@ new Promise(function(resolve, reject) {
 ## 四、项目框架搭建
 
 有了以上的知识储备咱们就可以开始进行一个后端服务的搭建了，是的，实践出真知，我们不一定要准备好所有的知识点才开始服务的搭建，node的知识还很多，koa2 也不单单就上面说的那么点知识，但咱们目的是搭建一套后端服务，有了一套整体框架的概念再到实际项目开发中去补缺补漏，完善知识体系，这是我认为比较快速的一套学习方法。
+项目目录结构：
 
+```
+ demo
+  |-- controller            // 控制层
+  |-- middleware            // 中间件
+  |-- model                 // 数据层
+  |-- mongodb               // mongodb
+  |-- router                // 路由
+  |    |-- index.js         // 主路由
+  |    |-- user.js          // 用户路由
+  |-- app.js                // 主入口
+  |-- config.js             // 配置文件
+  |-- ecosystem.config.js   // pm2 启动文件
+  |-- start.js              // 入口
+```
 
+具体源码可以 cd /koa2搭建后台应用/demo/ 查看，我下面拆出几个模块来讲
 
+> start.js 
+
+入口文件引入了 babel 使得我们的项目可以使用 es6 的语法
+
+```
+require('babel-core/register')();
+require('babel-polyfill');
+require('./app.js');
+```
+
+> app.js
+
+app.js 添加了一些中间件和路由，并监听了 config.port 端口
+
+```
+const app = new Koa();
+app.use(bodyParser());
+app.use(router.routes()).use(router.allowedMethods());
+app.use(errorMiddleware());
+
+app.listen(config.port, () => {
+  console.log(`Server started on ${config.port}`);
+});
+```
+
+> module/user.js
+
+数据库我们选取 MongoDB，并用了 mongoose 这个 npm 包来配合我们做数据库操作，关于 mongoose 的用法不清楚的同学可以查看官方文档或 [这一篇博文](http://ourjs.com/detail/53ad24edb984bb4659000013)
+下面是我们对 user 集合（这里不应该叫做表，而是集合）的设计
+
+```
+const userSchema = new Schema({
+    openId: String,
+    nickName: String,
+    avatarUrl: {type: String, default: 'http://oyn5he3v2.bkt.clouddn.com/none_aux.png'},
+    gender: {type: Number, default: 1}, // 默认男
+    province: String,
+    city: String,
+    country: String,
+}, {timestamps: true})
+```
+
+> controller/user.js
+
+最关心的应该是控制层的设计了，控制层对接了我们接口的处理和数据库的操作
+下面的控制层对应两个路由
+```
+router.get('/login/:openId', userController.getUser);
+router.post('/createUser', userController.createtUser);
+```
+一个 get 请求，一个 post 请求，做一些操作数据库和返回数据的业务操作。
+细心的你肯能会发现 `getUser` 方法 有做 try catch 处理，而 `createtUser` 方法没有做此处理，这里只是给大家表现出差异，我们其中在 app.js引入的中间件都做了统一的 try catch 处理的
+
+```
+export const getUser = async (ctx) => {
+  const {openId} = ctx.params
+  if (!openId) {
+    ctx.body =  _errData('openId 参数不存在')
+    return
+  }
+  try {
+    const resData = await userModel._findOpenId(openId)
+    if (resData) {
+      ctx.body = _successData(resData)
+    } else {
+      ctx.body =  _errData('用户不存在', 4000)
+    }
+  } catch (err) {
+    console.log(err)
+    ctx.body =  _errData()
+  }
+}
+
+export const createtUser = async (ctx) => {
+  const data = ctx.request.body
+  const resData = await userModel._create(data)
+  if (resData.openId) {
+    ctx.body = _successData(resData)
+  } else {
+    ctx.body =  _errData('用户创建失败', 4000)
+  }
+}
+```
+
+> middleware/index.js
+
+这里写了个 errorMiddleware 中间件，对整个项目的异常做 try catch 处理，当然你还可以添加自己需要的中间件
+
+```
+export function errorMiddleware () {
+  return async (ctx, next) => {
+    try {
+      await next();
+    } catch (err) {
+      console.log(err)
+      ctx.body = {
+        msg: '服务器错误',
+        code: 5000,
+        success: false,
+      }
+    }
+  };
+};
+```
+
+> config.js
+
+config.js 做了一些环境配置，我们开发环境和线上环境是不一样的，有可能需要配置不一样的端口，或者数据库等，可以在这份配置文件做配置
+
+```
+const common = {
+  mongodb: 'mongodb://localhost:27017/demo'
+}
+
+const development = Object.assign(common ,{
+  port: 3000,
+  mongodb: 'mongodb://localhost:27017/development'
+})
+
+const production = Object.assign(common ,{
+  port: 3001,
+  mongodb: 'mongodb://localhost:27017/production'
+})
+
+let config
+
+process.env.NODE_ENV === 'production' ? config = production : config = development
+
+export default config
+```
+
+## 五、进程管理工具
+
+上面的工程是搭建完了，但发现我们的工程开发效率实在太低了，特别是调试bug的时候，我们需要写完调试代码重启一下服务，费时费力。这里介绍个草鸡好用node进程管理工具 `pm2` 。
+
+下面是一份 pm2 的配置清单：
+主要的是我们配置了 log 日志输出，并且在开发模式下我们启动了 watch 模式，这样不用写好代码需要重新启动项目这么繁琐的操作了，再者就是我们区分了3个不同的环境 development 、 testing 、production。如果需要自己配置或修改清单可以参考网上的一些资料 [pm2 gitbook](https://wohugb.gitbooks.io/pm2/content/index.html)
+
+```
+apps : [
+    {
+      name: 'koa2-demo',
+      script: 'start.js',
+      log_date_format: 'YYYY-MM-DD HH:mm:ss',
+      error_file: 'server_logs/err.log',
+      exec_mode: "cluster",
+      out_file: 'server_logs/out.log',
+      max_memory_restart: '600M', // 限制最大内存
+      min_uptime: '200s', // 应用运行少于时间被认为是异常启动, 防止不断重启
+      env: {
+        COMMON_VARIABLE: 'true'
+      },
+      env_development: {
+        name: 'koa2-demo-development',
+        NODE_ENV: 'development',
+        watch: 'true'
+      },
+      env_testing: {
+        name: 'koa2-demo-testing',
+        NODE_ENV: 'testing'
+      },
+      env_production : {
+        name: 'koa2-demo-production',
+        NODE_ENV: 'production'
+      }
+    }
+  ]
+```
+
+接着配合 package.json 的 scripts 命令我们就可以这样启动 node 应用了
+
+```
+npm run server-dev
+npm run server-test
+npm run server-prod
+```
+
+## 六、部署线上
+
+线上部署也是用到 pm2 来启动启动 node 应用，将工程打个压缩包上传到服务器，解压一下，pm2 启动
+
+```
+npm run server-test
+npm run server-prod
+```
+
+别忘了需要先启动服务器的 MongoDB，好需要配个 nginx 来转发我们的端口,下面给出一份简单的 nginx 配置
+
+```
+server {
+    listen       80;
+    server_name  api.example.com;
+
+    location ^~/api/ {
+       proxy_pass http://127.0.0.1:3001/;
+    }
+}
+```
+
+## 总结：

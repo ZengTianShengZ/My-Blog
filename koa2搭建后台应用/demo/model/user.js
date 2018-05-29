@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-mongoose.Promise = Promise
+// mongoose.Promise = Promise
 
 const Schema = mongoose.Schema
 

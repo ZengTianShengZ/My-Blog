@@ -3,7 +3,7 @@
 import mongoose from 'mongoose';
 import config from '../config.js';
 mongoose.Promise = Promise
-mongoose.connect(config.mongodb, {useMongoClient:true});
+mongoose.connect(config.mongodb);
 mongoose.Promise = global.Promise;
 
 const db = mongoose.connection;
