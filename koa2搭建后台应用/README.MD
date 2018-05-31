@@ -2,14 +2,15 @@
 
 涉及到的功能点有
 
-+ koa2基础应用
-+ koa2-router 使用
-+ 简单的get、post请求
-+ 怎么写一个koa2中间件
-+ 接入 mongodb
-+ 项目框架搭建
-+ 使用pm2管理node进程
-+ 部署线上操作
+- [x] koa2基础应用
+- [x] koa 路由
+  - [x] 原生路由
+  - [x] 接收 get/post 请求
+  - [x] koa-router中间件
+- [x] koa 中间件  
+- [x] 项目框架搭建
+- [x] 进程管理工具PM2
+- [x] 部署线上
 
 ## 一、koa2 基础应用
 
@@ -84,10 +85,10 @@ node index.js
   socket: '<original node socket>' }
 ```
 
-可以看到 ctx 封装了一些 request 和 response 信息，这里的 ctx 其实就是对应 Koa Context  ，Koa Context 将 node 的 request 和 response 对象封装到这个对象中，可以看下面的一张对照表
+可以看到 ctx 封装了一些 request 和 response 信息，这里的 ctx 其实就是对应 koa Context  ，koa Context 将 node 的 request 和 response 对象封装到这个对象中，可以看下面的一张对照表
 
 ```
-ctx -> Koa Context // koa 启动时生成的上线下文
+ctx -> Koa Context // koa 启动时生成的上下文
 ctx.req -> 原生 Node 的 request 对象
 ctx.res -> 原生 Node 的 response 对象
 ctx.request -> koa 的 Request 对象.
@@ -120,7 +121,7 @@ ctx.status
 ## 二、koa 路由
 
 ### 1、原生路由
-我们有多个页面就有多个路由，也存在多个请求接口 get post 请求等，怎么来处理不同路由的请求呢，哈哈，其实很简单，应用到上面的知识点，我们能通过 ctx.request.url 拿到请求路径， switch 一下请求路径对不同的路由做区别处理不就行了。
+我们实际项目中存在多个路由，也存在多个请求接口 get/ post 请求等，怎么来处理不同路由的请求呢，其实很简单，应用到上面的知识点，我们能通过 ctx.request.url 拿到请求路径， switch一下请求路径对不同的路由做区分处理不就行了。
 
 ```
 const Koa = require('koa')
@@ -157,9 +158,9 @@ http://localhost:3000/404
 ```
 能看到不同的页面信息
 
-### 2、接收 get post 请求
+### 2、接收 get/post 请求
 
-原生路由怎么处理 get post 请求呢，可以通过 ctx.method 拿到请求类型, ctx.query 可以拿到请求数据，但 post请求 koa 没封装取参的方法，需要自己通过原生的 node request 进行处理， ctx.req 对象对应的就是 node request 上面提到过了
+原生路由怎么处理 get/post 请求呢，可以通过 ctx.method 拿到请求类型, ctx.query 可以拿到请求数据，但 post请求 koa 没封装取参的方法，需要自己通过原生的 node request 进行处理， ctx.req 对象对应的就是 node request ,前文有提到过了
 
 ```
 app.use( async ( ctx ) => {
@@ -198,7 +199,7 @@ function parsePostData( ctx ) {
 
 ### 3、koa-router中间件
 
-有没有发现万一工程一复杂，咱们自己处理原生的路由就比较麻烦，也很低效。咱们可以将这些麻烦的路由处理交给第三方中间件 koa-router中间件 来处理，中间件的概念下文做介绍，你只要先知道这个 npm 包引进来就可以踢咱们处理路由就行了。并且我们还用了一个 koa-bodyparser中间件 来处理 post 请求解析请求参数
+有没有发现万一工程一复杂，咱们自己处理原生的路由就比较麻烦，也很低效。咱们可以将这些麻烦的路由处理交给第三方中间件 `koa-router` 中间件 来处理，中间件的概念下文做介绍，你只要先知道这个 npm 包引进来就可以替咱们处理路由就行了。并且我们还用了一个 `koa-bodyparser ` 中间件来处理 post 请求解析请求参数
 
 ```
 const Koa = require('koa')
@@ -231,7 +232,7 @@ console.log('start-quick is starting http://localhost:3000/')
 
 ## 三、koa 中间件
 
-上面有提到中间件的概念，那中间件是什么呢，中间件也可以看成是过滤器，就好比水管管道，中间件就是管道上的阀门，水流过管道要经过一个或几个阀门的处理。有了中间件咱们就可以对数据的请求和响应多更多的处理了。下面咱们来写一个一个简单的 log 中间件
+上面有提到中间件的概念，那中间件是什么呢，中间件也可以看成是过滤器，就好比水管管道，中间件就是管道上的阀门，水流过管道要经过一个或几个阀门的处理。有了中间件咱们就可以对数据的请求和响应做更多的处理了。下面咱们来写一个简单的 log 中间件
 
 ```
 const app = new Koa()
@@ -240,19 +241,19 @@ async function logMiddleware(ctx, next) {
   console.log('url: %s , method: %s', ctx.url, ctx.method )
   await next()
 }
-// 引入中间件
+//引入中间件
 app.use(logMiddleware)
 app.use(async (ctx) => {
   ctx.body = 'hello logMiddleware'
 })
 ```
 
-可看到页面输出 'hello logMiddleware' 同时控制台也打印出了 log 信息。
-koa 中间件是一个 Promise 的方法 async fn(ctx, next), ctx 代表上下文，执行 next() 会进入下一个中间件，koa 的中间件的特征会被比喻成【洋葱模型】
+可看到页面输出 'hello logMiddleware' ，同时控制台也打印出了 log 信息。
+koa 中间件是一个 Promise 方法 ` async fn(ctx, next)`, ctx 代表上下文，执行 next() 会进入下一个中间件，koa 的中间件的特征会被比喻成【洋葱模型】
 
- [](img)
+ [](https://raw.githubusercontent.com/ZengTianShengZ/My-Blog/koa2/koa2%E6%90%AD%E5%BB%BA%E5%90%8E%E5%8F%B0%E5%BA%94%E7%94%A8/image/img1.png)
 
-koa 其实内部从接收到请求，到输出响应的伪代码大概如下，都是一个个中间件去处理的
+koa 其实内部从接收请求，到输出响应的伪代码大概如下，都是由一个个中间件处理的
 
 ```
 new Promise(function(resolve, reject) {
@@ -274,7 +275,8 @@ new Promise(function(resolve, reject) {
 
 ## 四、项目框架搭建
 
-有了以上的知识储备咱们就可以开始进行一个后端服务的搭建了，是的，实践出真知，我们不一定要准备好所有的知识点才开始服务的搭建，node的知识还很多，koa2 也不单单就上面说的那么点知识，但咱们目的是搭建一套后端服务，有了一套整体框架的概念再到实际项目开发中去补缺补漏，完善知识体系，这是我认为比较快速的一套学习方法。
+有了以上的知识储备咱们就可以开始进行一个后端服务的搭建了。是的，实践出真知，我们不一定要准备好所有的知识点才开始服务的搭建，node的知识还很多，koa2 也不单单就上面说的那么点知识，但咱们可以通过搭建一套后端服务，有了一套整体框架的概念再到实际项目开发中去补缺补漏，完善知识体系，这是我认为比较快速的一套学习方法。
+
 项目目录结构：
 
 ```
@@ -284,7 +286,7 @@ new Promise(function(resolve, reject) {
   |-- model                 // 数据层
   |-- mongodb               // mongodb
   |-- router                // 路由
-  |    |-- index.js         // 主路由
+  |    |-- index.js         // 主路由
   |    |-- user.js          // 用户路由
   |-- app.js                // 主入口
   |-- config.js             // 配置文件
@@ -322,6 +324,7 @@ app.listen(config.port, () => {
 > module/user.js
 
 数据库我们选取 MongoDB，并用了 mongoose 这个 npm 包来配合我们做数据库操作，关于 mongoose 的用法不清楚的同学可以查看官方文档或 [这一篇博文](http://ourjs.com/detail/53ad24edb984bb4659000013)
+
 下面是我们对 user 集合（这里不应该叫做表，而是集合）的设计
 
 ```
@@ -339,13 +342,12 @@ const userSchema = new Schema({
 > controller/user.js
 
 最关心的应该是控制层的设计了，控制层对接了我们接口的处理和数据库的操作
+
 下面的控制层对应两个路由
 ```
 router.get('/login/:openId', userController.getUser);
 router.post('/createUser', userController.createtUser);
 ```
-一个 get 请求，一个 post 请求，做一些操作数据库和返回数据的业务操作。
-细心的你肯能会发现 `getUser` 方法 有做 try catch 处理，而 `createtUser` 方法没有做此处理，这里只是给大家表现出差异，我们其中在 app.js引入的中间件都做了统一的 try catch 处理的
 
 ```
 export const getUser = async (ctx) => {
@@ -378,6 +380,10 @@ export const createtUser = async (ctx) => {
 }
 ```
 
+一个 get 请求，一个 post 请求，做一些操作数据库和返回数据的业务操作。
+细心的你肯能会发现 `getUser` 方法 有做 try catch 处理，而 `createtUser` 方法没有做此处理，这里只是给大家表现出差异，其实我们在 app.js 引入了个中间件 `errorMiddleware` 做了统一的 try catch 处理
+
+
 > middleware/index.js
 
 这里写了个 errorMiddleware 中间件，对整个项目的异常做 try catch 处理，当然你还可以添加自己需要的中间件
@@ -397,11 +403,14 @@ export function errorMiddleware () {
     }
   };
 };
+
+// 主入口程序使用中间件
+// app.use(logMiddleware)
 ```
 
 > config.js
 
-config.js 做了一些环境配置，我们开发环境和线上环境是不一样的，有可能需要配置不一样的端口，或者数据库等，可以在这份配置文件做配置
+config.js 做了一些环境配置，我们需要区分开发环境和线上环境，有可能需要配置不一样的端口，或者数据库等，可以在这份配置文件做配置
 
 ```
 const common = {
@@ -430,7 +439,7 @@ export default config
 上面的工程是搭建完了，但发现我们的工程开发效率实在太低了，特别是调试bug的时候，我们需要写完调试代码重启一下服务，费时费力。这里介绍个草鸡好用node进程管理工具 `pm2` 。
 
 下面是一份 pm2 的配置清单：
-主要的是我们配置了 log 日志输出，并且在开发模式下我们启动了 watch 模式，这样不用写好代码需要重新启动项目这么繁琐的操作了，再者就是我们区分了3个不同的环境 development 、 testing 、production。如果需要自己配置或修改清单可以参考网上的一些资料 [pm2 gitbook](https://wohugb.gitbooks.io/pm2/content/index.html)
+主要的是我们配置了 log 日志输出，并且在开发模式下我们启动了 watch 模式，这样在开发过程中不用频繁的重启服务了，再者就是我们区分了3个不同的环境 development 、 testing 、production。如果需要自己配置或修改清单可以参考网上的一些资料 [pm2 gitbook](https://wohugb.gitbooks.io/pm2/content/index.html)
 
 ```
 apps : [
@@ -480,7 +489,7 @@ npm run server-test
 npm run server-prod
 ```
 
-别忘了需要先启动服务器的 MongoDB，好需要配个 nginx 来转发我们的端口,下面给出一份简单的 nginx 配置
+别忘了需要先启动服务端的 MongoDB，好需要配个 nginx 来转发我们 node 服务的端口,下面给出一份简单的 nginx 配置
 
 ```
 server {
@@ -494,3 +503,7 @@ server {
 ```
 
 ## 总结：
+
+我们从介绍 koa ，到最后搭建一套简单的 node 后端服务，包括上线和部署，形成一套 node 服务体系。在这过程中我们涉及到了 mongodb 、 pm2 、nginx 配置等一下基本的后端知识体系做支撑。
+
+当然我们学习到的只是一些应用知识，需要在不断在实践和工作中去完善知识体系
