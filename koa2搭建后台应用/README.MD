@@ -251,7 +251,7 @@ app.use(async (ctx) => {
 可看到页面输出 'hello logMiddleware' ，同时控制台也打印出了 log 信息。
 koa 中间件是一个 Promise 方法 ` async fn(ctx, next)`, ctx 代表上下文，执行 next() 会进入下一个中间件，koa 的中间件的特征会被比喻成【洋葱模型】
 
- [](https://raw.githubusercontent.com/ZengTianShengZ/My-Blog/koa2/koa2%E6%90%AD%E5%BB%BA%E5%90%8E%E5%8F%B0%E5%BA%94%E7%94%A8/image/img1.png)
+![clipboard.png](https://raw.githubusercontent.com/ZengTianShengZ/My-Blog/master/koa2%E6%90%AD%E5%BB%BA%E5%90%8E%E5%8F%B0%E5%BA%94%E7%94%A8/image/img1.png)
 
 koa 其实内部从接收请求，到输出响应的伪代码大概如下，都是由一个个中间件处理的
 
