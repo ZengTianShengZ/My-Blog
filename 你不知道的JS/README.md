@@ -188,3 +188,75 @@ console.log(result[2]()); // 2
 
 上面的例子也是挺典型的，一般面试题比较考基础的话就会被问道，上面例子不仅考察到了块作用域的概念，函数作用域的概念，还考察到了闭包的概念（闭包后续将但不影响这个例子的理解），多琢磨一下就理解了。
 
+### 第四章： 提升
+
+提升指的是变量提升和函数提升，为什么JavaScript会有提升这个概念呢，其实也很好理解，因为JavaScript代码是先 `编译` 后 再 `执行` 的，所以在编译阶段就会先对变量声明和函数声明做流程处理了，在执行阶段就出现了所谓的变量提升和函数提升了。
+
+#### 1、变量提升
+
+```
+console.log(a); // undefined
+var a = 1;
+```
+上面代码 `console.log(a); // undefined` 就是因为编译阶段做了变量提升,先声明了个变量 a, 并默认赋值 undefined
+
+```
+var a;
+console.log(a); // undefined
+a = 1;
+```
+
+#### 2、函数提升
+
+函数同样也存在提升，这就是为什么函数能先调用后声明了
+
+```
+foo();
+function foo() {
+  console.log('---foo----');
+}
+```
+
+注意:函数表达式不会被提升
+
+```
+foo();
+var foo = function() {
+  console.log('---foo----');
+}
+// TypeError: foo is not a function
+```
+
+注意：函数会首先被提升，然后才是变量
+
+```
+var foo = 1;
+foo();
+function foo() {
+  console.log('---foo----');
+}
+// TypeError: foo is not a function
+```
+
+分析一下，因为上面例子编译后是这样的
+
+```
+var foo = undefined; // 变量名赋值 undefined
+function foo() {     // 函数先提升
+  console.log('---foo----');
+}
+foo = 1;             // 但接下去是变量被重新赋值了 1，是个Number类型
+foo();               // Number类型当然不能用函数方式调用，就报错了
+// TypeError: foo is not a function
+```
+
+### 第五章： 作用域闭包
+
+终于来到了这个章节，有点激动，闭包问题一直会在JavaScript被提起的一个奇葩问题。这章节让我们来理解闭包吧。
+
+#### 1、闭包的产生
+
+> 闭包的概念： 当函数可以记住并访问所在的词法作用域时，就产生了闭包
+
+概念貌似挺简单的
+
