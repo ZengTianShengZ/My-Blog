@@ -46,12 +46,56 @@
 
 // console.log(name);
 
-var foo = 1
-console.log(foo);
+// var foo = 1
+// console.log(foo);
 
-foo()
-function foo() {
-  console.log('---foo----');
+// foo()
+// function foo() {
+//   console.log('---foo----');
+// }
+
+
+// function foo() {
+//   var _a = 0;
+//   var b = 0;
+//   function _add() {
+//     b = _a + 10    
+//   }
+//   function bar() {
+//     _add()
+//   }
+//   function getB() {
+//     return b
+//   }
+//   return {
+//     bar: bar,
+//     getB: getB
+//   }
+// }
+
+// var bat = foo()
+// bat.bar()
+// bat.getB() // 10
+
+// foo.js
+var _a = 0;
+var b = 0;
+function _add() {
+  b = _a + 10
+}
+function bar() {
+  _add()
+}
+function getB() {
+  return b
+}
+export default {
+  bar: bar,
+  getB: getB
 }
 
-// var foo
+import foo from 'foo'
+
+var bat = foo()
+bat.bar()
+bat.getB() // 10
