@@ -25,8 +25,39 @@
 // foo.bind(obj3)() // 3
 
 
-function foo(a) {
-  this.a = a
+// function foo(a) {
+//   this.a = a
+// }
+// var bar = new foo(1)
+// console.log(bar.a);
+
+// var arr = ['foo', 'bar']
+// arr.baz = 'baz'
+// console.log(arr.baz);
+
+// var obj = {}
+// // console.log(Object.getOwnPropertyDescriptor(obj, 'a'));
+
+// Object.defineProperty(obj, 'a', {
+//   value: 1,
+//   writable: false,
+//   enumerable: true,
+//   configurable: true
+// })
+
+// obj.a = 2
+// console.log(obj.a);
+
+var obj = {
+  get a() {
+    return this._a_
+  },
+  set a(val) {
+    this._a_ = val * 2
+  }
 }
-var bar = new foo(1)
-console.log(bar.a);
+
+obj.a = 2
+console.log(obj.a);
+
+

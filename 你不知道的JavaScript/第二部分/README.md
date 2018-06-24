@@ -111,3 +111,102 @@ console.log(bar.a);
 2、是否有 `call`、`apply`、`bind` 显式的改变了 this 的指向
 
 3、函数是否是被 new 创建的，是的话 this 指向 new 出来的对象
+
+
+### 第三章： 对象
+
+对象再熟悉不过了，对象的基本要素就是属性和方法，但有时候代码写着写着就忘了对象本来的特征。
+
+#### 1、内置对象
+
+> String
+
+```
+var str = 'i am a string';
+str.length ;      // 13
+str.charAt(3);    // m
+```
+
+咱们经常使用字符串，没但没发觉字符串怎么会有属性和方法，这个特性应该对象才有的呀。原来JavaScript 引擎自动把字符串转换成 String 对象，所以可以访问属性和方法。
+
+> Array
+
+数组也是 JavaScript 的内置对象，那既然是对象是不是也可以像对象那样赋值和操作呢。
+
+```
+var arr = ['foo', 'bar'];
+arr.baz = 'baz';
+console.log(arr.baz);
+```
+上面例子不像以往那样操作数组，而是按对象的形式进行操作，是可行的。但这里也是为了给大家解释数组也是对象这么个基本概念，一般不将数组当做普通键值对象来使用。
+
+
+内置对象除了上面提到的 String，Array，还有 Number、Boolean、Object、Function、Date、RegExp、Error
+
+#### 2、属性描述符
+
+```
+var obj = {
+  a: 1
+}
+```
+对象 obj 的属性 a 就单单记录一个数值 1 吗，其实不是的，咱们用 `getOwnPropertyDescriptor` 打印下属性 a 看下输出信息
+
+```
+console.log(Object.getOwnPropertyDescriptor(obj, 'a'));
+// 输出
+{
+  value: 1, 
+  writable: true,
+  configurable: true,
+  enumerable: true
+}
+```
+几个属性来解释一下
+
+> writable
+
+writable 决定是否可以修改属性值
+
+```
+var obj = {}
+Object.defineProperty(obj, 'a', {
+  value: 1,
+  writable: false,
+  enumerable: true,
+  configurable: true
+})
+obj.a = 2
+console.log(obj.a); // 1
+```
+writable 属性置为 false 发现无法更改属性的值了
+
+> configurable
+
+configurable 属性用来描述对象的属性是否可配置，也就是 configurable = false，接下去代码想要将 configurable = true 将会报错，因为对象的属性不可配置了
+
+> enumerable
+
+enumerable 属性用来设置该对象属性是否可枚举， enumerable = false 那么该对象属性将不在枚举中，也就是 for...in 将不会遍历到该属性
+
+#### 3、Getter和Setter
+
+对象还有两个隐藏的函数会被忽略，因为是 JavaScript 的默认操作，没特殊用法的话就不会去修改它，如果重新修改了 Getter和Setter 隐藏函数，JavaScript会忽略它们的 value 和 writable 特性 
+
+下面一个例子对属性 a 进行  Getter和Setter 重写
+
+```
+var obj = {
+  get a() {
+    return this._a_
+  },
+  set a(val) {
+    this._a_ = val * 2
+  }
+}
+
+obj.a = 2
+console.log(obj.a); // 4
+```
+因为对赋值和取值时都会触发相应的 get 和 set 方法，那就可以利用这个特性做一些比如消息的发布订阅，事件通知能等高级用法了
+
