@@ -48,16 +48,35 @@
 // obj.a = 2
 // console.log(obj.a);
 
-var obj = {
-  get a() {
-    return this._a_
-  },
-  set a(val) {
-    this._a_ = val * 2
-  }
-}
+// var obj = {
+//   get a() {
+//     return this._a_
+//   },
+//   set a(val) {
+//     this._a_ = val * 2
+//   }
+// }
 
-obj.a = 2
-console.log(obj.a);
+// obj.a = 2
+// console.log(obj.a);
+// var anotherObj = { a: 1}
+// var obj = Object.create(anotherObj)
+// console.log(obj.a);
+// obj.__proto__.constructor.prototype.a = 123
 
+// function FFFff(params) {
+  
+// }
+// console.log(FFFff.prototype);
+
+// FFFff.prototype.a = 1
+// console.log(FFFff.a);
+
+// function Foo() {
+//   // ...
+// }
+// var a = new Foo()
+
+var obj = {}
+console.log(obj.__proto__);
 

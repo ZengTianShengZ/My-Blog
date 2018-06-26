@@ -210,3 +210,72 @@ console.log(obj.a); // 4
 ```
 因为对赋值和取值时都会触发相应的 get 和 set 方法，那就可以利用这个特性做一些比如消息的发布订阅，事件通知能等高级用法了
 
+### 第五章： 原型
+
+JavaScript 对象有一个特殊的 [Prototype] 属性，几乎所有对象在创建时 [Prototype] 属性都会被赋予一个非空的值。
+
+#### 1、Prototype
+
+```
+var anotherObj = { a: 1}
+var obj = Object.create(anotherObj)
+console.log(obj.a);  // 1
+```
+
+`Object.create()` 会把一个对象的 [Prototype] 关联到另一个对象上，上面例子对象 obj 的 [Prototype] 被关联到了对象 anotherObj 上，当访问对象 obj 的属性 a 时，如果对象上不存在该属性那么 [Prototype] 链就会被遍历，[Prototype] 链上找到对应的属性就会返回。到哪里才是 [Prototype] 链的‘尽头’呢，[Prototype] 链最终会指向JavaScript 内置的 Object.prototype
+
+#### 2、"类"函数
+
+```
+function Foo() {
+  // ...
+}
+var a = new Foo()
+```
+
+上面例子的 Foo 是一个"类"函数，或被叫做 "构造函数" ，为什么叫做"类"函数而不直接叫做"类"呢，其实 JavaScript 中只有对象，它并没有类，es6 的类也只是一个语法糖而已。
+
+被习惯称作"类"的原因是因为 JavaScript 有个 new 操作符，所以习惯的和其他语言一样称 new 后面的函数为一个类。new Foo() 只是间接完成了一个目的：一个关联到其他对象的新对象。也就是 new 操作符的作用就是创建一个关联对象而已。
+
+Foo 其实也只是一个函数， 没有 new 操作符 Foo() 也能正常执行，只是当且尽当使用 new 时，函数调用会变成 ‘构造函数调用’。
+
+#### 3、原型链
+
+```
+function Foo() {
+  // ...
+}
+Foo.prototype // {}
+```
+所有的函数默认都会有一个名为 `prototype` 的共有并且不可枚举的属性，prototype即为函数的原型
+
+```
+function Foo() {
+  // ...
+}
+var a = new Foo()
+a.__proto__ // {}
+```
+所有的对象默认都会有一个名为 `__proto__` 的共有并且不可枚举的属性
+
+`prototype` 和 `__proto__` 有什么联系呢？
+
+```
+a.__proto__ === Foo.prototype
+```
+每个对象的 `__proto__` 属性指向函数的原型。
+
+因为每个对象都有 `__proto__` 属性指向函数的 `prototype` 所以往函数的 `prototype`
+添加属性或方法，每个对象都能访问的到
+
+```
+function Foo() {
+  // ...
+}
+Foo.prototype.age = 233
+var a = new Foo()
+var b = new Foo()
+a.age // 233
+b.age // 233
+```
+
