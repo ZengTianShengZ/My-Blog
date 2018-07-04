@@ -279,3 +279,36 @@ a.age // 233
 b.age // 233
 ```
 
+#### 4、对象关联
+
+如果在第一个对象上没有找到需要的属性或者方法引用，JavaScript引擎会继续在 [Prototype] 关联的对象上进行查找。同理，如果在后者中也没有找到需要的引用就会继续查找它的 [Prototype] ，以此类推。这一系列对象的链接背称为 ‘原型链’ 。
+
+‘原型链’ 在上面已经提到和解释了，这里更加深入的去理解什么是 ‘原型链’ 。
+
+‘原型链’ 这种机制的本质其实是对象之间的关联关系：`对象关联`
+
+```
+
+var Obj1 = {
+  name: '曾田生',
+  setID: function(ID) {
+    console.log(ID)
+  }
+}
+
+var Obj2 = Object.create(Obj1)
+
+Obj2.age = 233
+
+var Obj3 = Object.create(Obj2)
+
+console.log(Obj3.age)  // 233
+console.log(Obj3.name) // 曾田生
+Obj3.setID('ABCD')     // ABCD
+console.log(Obj3)
+```
+
+我们使用 Object.create 将一个个对象 `关联` 起来，当访问到自身对象没有的方法或属性时，就会去它关联的对象查找，这其实就是 [Prototype] 的机制。
+
+
+

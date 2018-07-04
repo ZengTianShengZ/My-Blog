@@ -77,6 +77,19 @@
 // }
 // var a = new Foo()
 
-var obj = {}
-console.log(obj.__proto__);
+var Obj1 = {
+  name: 'zzz',
+  setID: function(ID) {
+    console.log(ID)
+  }
+}
 
+var Obj2 = Object.create(Obj1)
+
+Obj2.age = 233
+
+var Obj3 = Object.create(Obj2)
+
+console.log(Obj3.age)
+console.log(Obj3.name)
+Obj3.setID('ABCD')
