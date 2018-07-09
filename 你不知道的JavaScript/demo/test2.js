@@ -78,7 +78,7 @@
 // var a = new Foo()
 
 var Obj1 = {
-  name: 'zzz',
+  name: '曾田生',
   setID: function(ID) {
     console.log(ID)
   }

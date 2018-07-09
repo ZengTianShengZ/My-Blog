@@ -1,3 +1,5 @@
+接着上一篇 [你不知道的JavaScript·第一部分](https://github.com/ZengTianShengZ/My-Blog/tree/master/%E4%BD%A0%E4%B8%8D%E7%9F%A5%E9%81%93%E7%9A%84JavaScript/%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86)
+
 ### 第一章： 关于this
 
 > this 到底是什么
@@ -6,7 +8,7 @@ this 是在 `运行时` 绑定的，this的绑定和函数声明的位置没有�
 
 ```
 function foo() {
-  this.bar()
+  this.bar(); // this指向window，相当于 window.bar()
 }
 function bar() {
   console.log('---bar---');
@@ -14,7 +16,7 @@ function bar() {
 foo()
 ```
 
-上段代码在浏览器下是能正常执行的，函数 bar 能被正常调用，因为函数 bar 是声明在全局的，全局的 this 指向 window ， 执行函数 foo 时也是在全局（window）下执行的，所以函数内部的 this 也是指向 window 的，相对于在函数 foo 内部 是 `window.bar()` ，自然能正常调用执行。
+上段代码在浏览器下是能正常执行的，函数 bar 能被正常调用，因为函数 bar 是声明在全局的，全局的 this 指向 window ， 执行函数 foo 时也是在全局（window）下执行的，所以函数内部的 this 也是指向 window 的，相当于在函数 foo 内部 是 `window.bar()` ，自然能正常调用执行。
 
 但在严格模式下 'use strict' ， 全局 this 不指向 window，而是 undefined，所以在严格模式下上面代码会报错
 
@@ -59,7 +61,7 @@ obj2.foo() // 2
 
 > 特殊例子3
 
-下面例子虽然函数 foo 声明在全局，但被利用 `call`、`apply`、`bind` 显式的绑定了对象，this 指向显式绑定的对象
+下面例子虽然函数 foo 声明在全局，但被利用 `call`、`apply`、`bind` 显式的绑定了对象，this 指向显式绑定的对象
 
 ```
 function foo() {
@@ -91,9 +93,9 @@ var bar = new foo(1)
 console.log(bar.a);
 ```
 
-使用 new 来调用函数经历了一下步骤：
+使用 new 来调用函数经历了以下步骤：
 
-1、创建或者说构造一个全新的对象
+1、创建或者说构造一个全新的对象
 
 2、这个新对象会被执行[Prototype]连接
 
@@ -108,10 +110,11 @@ console.log(bar.a);
 
 1、看调用者，函数被谁调用 this 指向谁
 
-2、是否有 `call`、`apply`、`bind` 显式的改变了 this 的指向
+2、是否有 `call`、`apply`、`bind` 显式的改变了 this 的指向
 
 3、函数是否是被 new 创建的，是的话 this 指向 new 出来的对象
 
+> 为什么 this 的指向不固定呢，因为 JavaScript 是‘解释执行’ 语言，边编译边执行的，this 的指向也就动态的。
 
 ### 第三章： 对象
 
@@ -127,7 +130,7 @@ str.length ;      // 13
 str.charAt(3);    // m
 ```
 
-咱们经常使用字符串，没但没发觉字符串怎么会有属性和方法，这个特性应该对象才有的呀。原来JavaScript 引擎自动把字符串转换成 String 对象，所以可以访问属性和方法。
+字符串经常使用，没但发觉字符串也会有属性和方法，这个特性应该对象才有的呀。原来JavaScript 引擎自动把字符串转换成 String 对象，所以可以访问属性和方法。
 
 > Array
 
@@ -150,7 +153,7 @@ var obj = {
   a: 1
 }
 ```
-对象 obj 的属性 a 就单单记录一个数值 1 吗，其实不是的，咱们用 `getOwnPropertyDescriptor` 打印下属性 a 看下输出信息
+对象 obj 的属性 a 就单单记录一个数值 1 吗，其实不是的，咱们用 `getOwnPropertyDescriptor` 打印下属性 a 看下输出信息
 
 ```
 console.log(Object.getOwnPropertyDescriptor(obj, 'a'));
@@ -162,7 +165,7 @@ console.log(Object.getOwnPropertyDescriptor(obj, 'a'));
   enumerable: true
 }
 ```
-几个属性来解释一下
+发现打印出来好几个属性，这几个属性来解释一下
 
 > writable
 
@@ -179,21 +182,21 @@ Object.defineProperty(obj, 'a', {
 obj.a = 2
 console.log(obj.a); // 1
 ```
-writable 属性置为 false 发现无法更改属性的值了
+writable 属性置为 false 就无法更改属性的值了
 
 > configurable
 
-configurable 属性用来描述对象的属性是否可配置，也就是 configurable = false，接下去代码想要将 configurable = true 将会报错，因为对象的属性不可配置了
+configurable 属性用来描述对象的属性是否可配置，也就是 configurable = false，接下去代码想要将 configurable = true 将会报错，因为对象的属性已经不可配置了
 
 > enumerable
 
 enumerable 属性用来设置该对象属性是否可枚举， enumerable = false 那么该对象属性将不在枚举中，也就是 for...in 将不会遍历到该属性
 
-#### 3、Getter和Setter
+#### 3、Getter和Setter
 
-对象还有两个隐藏的函数会被忽略，因为是 JavaScript 的默认操作，没特殊用法的话就不会去修改它，如果重新修改了 Getter和Setter 隐藏函数，JavaScript会忽略它们的 value 和 writable 特性 
+对象还有两个隐藏的函数会被忽略，因为是 JavaScript 的默认操作，没特殊用法的话就不会去修改它，如果重新修改了 Getter和Setter 隐藏函数，JavaScript会忽略它们的 value 和 writable 特性 
 
-下面一个例子对属性 a 进行  Getter和Setter 重写
+下面一个例子对属性 a 进行 Getter和Setter 重写
 
 ```
 var obj = {
@@ -208,7 +211,7 @@ var obj = {
 obj.a = 2
 console.log(obj.a); // 4
 ```
-因为对赋值和取值时都会触发相应的 get 和 set 方法，那就可以利用这个特性做一些比如消息的发布订阅，事件通知能等高级用法了
+因为对赋值和取值时都会触发相应的 get 和 set 方法，那就可以利用这个特性做一些比如消息的发布订阅，事件通知等高级用法了
 
 ### 第五章： 原型
 
@@ -235,11 +238,11 @@ var a = new Foo()
 
 上面例子的 Foo 是一个"类"函数，或被叫做 "构造函数" ，为什么叫做"类"函数而不直接叫做"类"呢，其实 JavaScript 中只有对象，它并没有类，es6 的类也只是一个语法糖而已。
 
-被习惯称作"类"的原因是因为 JavaScript 有个 new 操作符，所以习惯的和其他语言一样称 new 后面的函数为一个类。new Foo() 只是间接完成了一个目的：一个关联到其他对象的新对象。也就是 new 操作符的作用就是创建一个关联对象而已。
+被习惯称作"类"的原因是因为 JavaScript 有个 new 操作符，所以习惯的和其他语言一样称 new 后面的函数为一个类。new Foo() 只是间接完成了一个目的：一个关联到其他对象的新对象。也就是 new 操作符的作用就是创建一个关联对象而已。
 
-Foo 其实也只是一个函数， 没有 new 操作符 Foo() 也能正常执行，只是当且尽当使用 new 时，函数调用会变成 ‘构造函数调用’。
+Foo 其实也只是一个函数， 没有 new 操作符， Foo() 也能正常执行，只是当且仅当使用 new 时，函数调用会变成 ‘构造函数调用’。
 
-#### 3、原型链
+#### 3、原型链
 
 ```
 function Foo() {
@@ -247,7 +250,7 @@ function Foo() {
 }
 Foo.prototype // {}
 ```
-所有的函数默认都会有一个名为 `prototype` 的共有并且不可枚举的属性，prototype即为函数的原型
+所有的函数默认都会有一个名为 `prototype` 的共有并且不可枚举的属性，prototype即为函数的原型
 
 ```
 function Foo() {
@@ -263,7 +266,7 @@ a.__proto__ // {}
 ```
 a.__proto__ === Foo.prototype
 ```
-每个对象的 `__proto__` 属性指向函数的原型。
+每个对象的 `__proto__` 属性指向函数的原型。
 
 因为每个对象都有 `__proto__` 属性指向函数的 `prototype` 所以往函数的 `prototype`
 添加属性或方法，每个对象都能访问的到
@@ -281,7 +284,7 @@ b.age // 233
 
 #### 4、对象关联
 
-如果在第一个对象上没有找到需要的属性或者方法引用，JavaScript引擎会继续在 [Prototype] 关联的对象上进行查找。同理，如果在后者中也没有找到需要的引用就会继续查找它的 [Prototype] ，以此类推。这一系列对象的链接背称为 ‘原型链’ 。
+如果在第一个对象上没有找到需要的属性或者方法引用，JavaScript引擎会继续在 [Prototype] 关联的对象上进行查找。同理，如果在后者中也没有找到需要的引用就会继续查找它的 [Prototype] ，以此类推。这一系列对象的链接被称为 ‘原型链’ 。
 
 ‘原型链’ 在上面已经提到和解释了，这里更加深入的去理解什么是 ‘原型链’ 。
 
@@ -291,7 +294,7 @@ b.age // 233
 
 var Obj1 = {
   name: '曾田生',
-  setID: function(ID) {
+  setID: function(ID) {
     console.log(ID)
   }
 }
@@ -305,10 +308,10 @@ var Obj3 = Object.create(Obj2)
 console.log(Obj3.age)  // 233
 console.log(Obj3.name) // 曾田生
 Obj3.setID('ABCD')     // ABCD
-console.log(Obj3)
+console.log(Obj3)
 ```
 
 我们使用 Object.create 将一个个对象 `关联` 起来，当访问到自身对象没有的方法或属性时，就会去它关联的对象查找，这其实就是 [Prototype] 的机制。
 
-
+花了两个篇幅来整理 《你不知道的JavaScript·上卷》，希望各位看官有所收获，欢迎 star
 
