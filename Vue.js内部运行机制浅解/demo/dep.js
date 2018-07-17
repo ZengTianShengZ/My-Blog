@@ -11,7 +11,7 @@ class Dep {
 
   /* 通知所有Watcher对象更新视图 */
   notify() {
-    this.subs.forEach((sub) => {
+    this.subs.forEach((sub) => {      
       sub.update();
     })
   }
@@ -86,6 +86,5 @@ let o = new Vue({
     test2: "I am test2."
   }
 });
-o._data.test = "hello,world."; /* 视图更新啦～ */
 o._data.test = "hello,world."; /* 视图更新啦～ */
 o._data.test2 = "hello,world."; /* 视图更新啦～ */
