@@ -495,3 +495,55 @@ optimize 主要作用就跟它的名字一样，用作「优化」，optimize �
 
 generate 会将 AST 转化成 render funtion 字符串，最终得到 render 的字符串以及 staticRenderFns 字符串。
 
+```
+function generate (rootAst) {
+    const code = rootAst ? genElement(rootAst) : '_c("div")'
+    return {
+        render: `with(this){return ${code}}`,
+    }
+}
+```
+
+generate 函数是将我们上面生成好的 AST（抽象语法树）作为入参，最后返回一个 render 字符串。
+
+其中  render 字符串里面有个js关键字 [with](http://www.w3school.com.cn/js/pro_js_statements_with.asp)，with 用于指定作用域用的。 那返回的 render 属性是个字符串怎么执行呢， js 有个 [eval() 函数](http://www.w3school.com.cn/js/jsref_eval.asp) 可将字符串当做脚本来执行。
+
+可以结合上面那几个步骤 parse、optimize 来分析 generate 的工作大致过程是这样的：
+
+![img2](./image/img2.png)
+
+流程图最后一步的 with 函数的 _c，_l 到底是什么？其实他们是 Vue.js 对一些函数的简写，比如说 _c 对应的是 createElement 这个函数。
+
+
+其中 generate 函数里值得一提的是对 vue 指令 v-if 、v-for 的解析
+
+> genIf
+
+```
+function genIf (el) {
+    el.ifProcessed = true;
+    if (!el.ifConditions.length) {
+        return '_e()';
+    }
+    return `(${el.ifConditions[0].exp})?${genElement(el.ifConditions[0].block)}: _e()`
+}
+```
+
+> genFor
+
+```
+function genFor (el) {
+    el.forProcessed = true;
+
+    const exp = el.for;
+    const alias = el.alias;
+    const iterator1 = el.iterator1 ? `,${el.iterator1}` : '';
+    const iterator2 = el.iterator2 ? `,${el.iterator2}` : '';
+
+    return `_l((${exp}),` +
+        `function(${alias}${iterator1}${iterator2}){` +
+        `return ${genElement(el)}` +
+    '})';
+}
+```
+
