@@ -512,7 +512,7 @@ generate 函数是将我们上面生成好的 AST（抽象语法树）作为入�
 
 ![img2](./image/img2.png)
 
-流程图最后一步的 with 函数的 _c，_l 到底是什么？其实他们是 Vue.js 对一些函数的简写，比如说 _c 对应的是 createElement 这个函数。
+流程图最后一步的 with 函数的 _c，_l 到底是什么？其实他们是 Vue.js 对一些函数的简写，比如说 _c 对应的是 createElement 这个函数。执行 with 函数会返回 Virtual DOM，这个放在下一节讲。
 
 
 其中 generate 函数里值得一提的是对 vue 指令 v-if 、v-for 的解析
@@ -546,4 +546,13 @@ function genFor (el) {
     '})';
 }
 ```
+
+## 六、diff 及 patch 机制
+
+patch 机制对应文章开头内部流程图的第5点 视图更新机制。vue有一套高效的视图更新机制，也就是 patch 的核心算法 diff 算法。diff 算法的过程就是两个新老 VNode 节点的比较过程。
+
+由于这部分内容过去复杂，自己也还在研究，放在下一章节讲，没时间的话也有可能有不讲。。。
+
+
+## 总结
 
