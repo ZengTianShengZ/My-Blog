@@ -1,14 +1,14 @@
-# Vue.js内部运行机制浅解
+### Vue.js内部运行机制浅解
 
-## 一、内部流程图
+### 一、内部流程图
 
-![img.png](./image/img1.png)
+![img.png](https://github.com/ZengTianShengZ/My-Blog/blob/master/Vue.js%E5%86%85%E9%83%A8%E8%BF%90%E8%A1%8C%E6%9C%BA%E5%88%B6%E6%B5%85%E8%A7%A3/image/img1.png?raw=true)
 
-### 1、初始化及挂载
+#### 1、初始化及挂载
 
 在 new Vue() 之后。 Vue 会调用 _init 函数进行初始化，在 init 过程，它会初始化生命周期、事件、 props、 methods、 data、 computed 与 watch 等。其中最重要的是通过 Object.defineProperty 设置 setter 与 getter 函数，用来实现「响应式」以及「依赖收集」。
 
-### 2、编译
+#### 2、编译
 
 compile编译可以分成 parse、optimize 与 generate 三个阶段，最终需要得到 render function。
 
@@ -26,11 +26,11 @@ generate 是将 AST 转化成 render function 的过程，得到结果是 render
 
 在经历过 parse、optimize 与 generate 这三个阶段以后，组件中就会存在渲染 VNode 所需的 render function 了。
 
-### 3、响应式
+#### 3、响应式
 
 响应式部分会对数据进行响应式响应和依赖收集
 
-### 4、Virtual DOM
+#### 4、Virtual DOM
 
 render function 会被转化成 VNode 节点。Virtual DOM 其实就是一棵以 JavaScript 对象（ VNode 节点）作为基础的树，用对象属性来描述节点，实际上它只是一层对真实 DOM 的抽象。
 
@@ -56,11 +56,11 @@ render function 会被转化成 VNode 节点。Virtual DOM 其实就是一棵以
 </div>
 ```
 
-### 5、更新视图
+#### 5、更新视图
 
 更新视图可不是简单粗暴的得到一个新的VNode 节点，然后用 innerHTML 直接全部渲染到真实 DOM 中，如果我们只是对视图做了一小块内容进行了修改，这样做似乎有些「浪费」。「patch」就是对更新视图做了优化。我们会将新的 VNode 与旧的 VNode 一起传入 patch 进行比较，经过 diff 算法得出它们的「差异」。最后我们只需要将这些「差异」的对应 DOM 进行修改即可。
 
-## 二、响应式系统的基本原理
+### 二、响应式系统的基本原理
 
 Vue.js就是基于 [Object.defineProperty]() 实现「响应式系统」的.
 
@@ -132,9 +132,9 @@ o._data.test = "hello,world."; /* 视图更新啦～ */
 ```
 
 
-## 三、响应式系统的依赖收集追踪原理
+### 三、响应式系统的依赖收集追踪原理
 
-### 1、为什么需要依赖收集
+#### 1、为什么需要依赖收集
 
 首先要明白为什么需要依赖收集
 
@@ -163,7 +163,7 @@ this.text3 = 'modify text3';
 
 我们修改了 data 中 text3 的数据，但是因为视图中并不需要用到 text3，所以理论上是不需要进行视图更新。所以我们需要对视图用到的数据进行依赖收集，当收集的数据有改变时再做视图更新。依赖收集是为了优化视图更新用的。
 
-### 2、模拟依赖收集
+#### 2、模拟依赖收集
 
 demo：
 
@@ -270,7 +270,7 @@ get: function reactiveGetter() {
 ```
 
 
-## 四、Virtual DOM 的一个 VNode 节点
+### 四、Virtual DOM 的一个 VNode 节点
 
 Virtual DOM 其实就是一棵以 JavaScript 对象（VNode 节点）作为基础的树，用对象属性来描述节点，实际上它只是一层对真实 DOM 的抽象。最终可以通过一系列操作使这棵树映射到真实环境上。
 
@@ -377,7 +377,7 @@ function createTextVNode (val) {
 
 等等节点的一系列 CRUD
 
-## 五、Compile 编译 template 模板
+### 五、Compile 编译 template 模板
 
 这一步对应文章刚开始的流程图中的 `2、编译` 部分。
 
@@ -391,7 +391,7 @@ compile 编译可以分成 parse、optimize 与 generate 三个阶段，最终�
 </div>
 ```
 
-### 1、parse
+#### 1、parse
 
 parse 会用正则等方式将 template 模板中进行字符串解析，得到指令、class、style等数据，形成 AST（抽象语法树（abstract syntax tree或者缩写为AST））
 
@@ -446,7 +446,7 @@ parse 会用正则等方式将 template 模板中进行字符串解析，得到�
 
 parse 基本方案是用正则匹配，至于具体的解析过程就不分析了，太麻烦太复杂了。。。
 
-### 2、optimize
+#### 2、optimize
 
 optimize 主要作用就跟它的名字一样，用作「优化」，optimize 过程就是对第 1 步 parse出的节点做标记，标记出一些静态节点，为了后面节点 diff 做优化，节省性能。
 
@@ -491,7 +491,7 @@ optimize 主要作用就跟它的名字一样，用作「优化」，optimize �
 
 ```
 
-### 3、generate
+#### 3、generate
 
 generate 会将 AST 转化成 render funtion 字符串，最终得到 render 的字符串以及 staticRenderFns 字符串。
 
@@ -510,7 +510,7 @@ generate 函数是将我们上面生成好的 AST（抽象语法树）作为入�
 
 可以结合上面那几个步骤 parse、optimize 来分析 generate 的工作大致过程是这样的：
 
-![img2](./image/img2.png)
+![img2](https://github.com/ZengTianShengZ/My-Blog/blob/master/Vue.js%E5%86%85%E9%83%A8%E8%BF%90%E8%A1%8C%E6%9C%BA%E5%88%B6%E6%B5%85%E8%A7%A3/image/img2.png?raw=true)
 
 流程图最后一步的 with 函数的 _c，_l 到底是什么？其实他们是 Vue.js 对一些函数的简写，比如说 _c 对应的是 createElement 这个函数。执行 with 函数会返回 Virtual DOM，这个放在下一节讲。
 
@@ -547,13 +547,13 @@ function genFor (el) {
 }
 ```
 
-## 六、diff 及 patch 机制
+### 六、diff 及 patch 机制
 
 patch 机制对应文章开头内部流程图的第5点 视图更新机制。vue有一套高效的视图更新机制，也就是 patch 的核心算法 diff 算法。diff 算法的过程就是两个新老 VNode 节点的比较过程。
 
 由于这部分内容过去复杂，自己也还在研究，放在下一章节讲，没时间的话也有可能有不讲。。。
 
 
-## 总结
+### 总结
 
-本篇粗略分析了下 【Vue.js内部运行机制】，有些知识点讲的太笼统，但有了这么一个大概的思维框架，再针对各个部分学习，详细会更加得心应手。
+本篇粗略分析了下 【Vue.js内部运行机制】，有些知识点讲的太笼统，但有了这么一个大概的思维框架，再针对各个部分学习，相信会更加得心应手。
