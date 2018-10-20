@@ -10,7 +10,7 @@ class Dep {
   }
 
   /* 通知所有Watcher对象更新视图 */
-  notify() {
+  notify() {        
     this.subs.forEach((sub) => {      
       sub.update();
     })
@@ -45,6 +45,7 @@ function defineReactive(obj, key, val) {
     configurable: true,
     /* 属性可被修改或删除 */
     get: function reactiveGetter() {
+      console.log('=====get====');
       /* 将Dep.target（即当前的Watcher对象存入dep的subs中） */
       dep.addSub(Dep.target);
       return val; /* 实际上会依赖收集，下一小节会讲 */
@@ -76,7 +77,8 @@ class Vue {
     /* 新建一个Watcher观察者对象，这时候Dep.target会指向这个Watcher对象 */
     new Watcher();
     /* 在这里模拟render的过程，为了触发test属性的get函数 */
-    console.log('render~', this._data.test);
+    this._data.test
+    this._data.test2 // =====get====
   }
 }
 
