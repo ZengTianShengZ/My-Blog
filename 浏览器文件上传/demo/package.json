@@ -1,0 +1,11 @@
+{
+  "name": "",
+  "version": "",
+  "devDependencies": {
+    "busboy": "^0.2.14",
+    "koa-bodyparser": "^4.2.0",
+    "koa-router": "^7.4.0",
+    "koa-static": "^4.0.2",
+    "koa2": "^2.0.0-alpha.7"
+  }
+}

@@ -75,8 +75,9 @@ function render (ctx, next) {
     })
 }
 
-app.use(serve('/dist', './dist', true))
-app.use(serve('/public', './public', true))
+// app.use(serve('/dist', './dist', true))
+// app.use(serve('/public', './public', true))
+app.use(serve(__dirname + '/dist'))
 
 router.get('*', render)
 app.use(router.routes()).use(router.allowedMethods())

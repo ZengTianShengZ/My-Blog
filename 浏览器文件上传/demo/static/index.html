@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>浏览器文件上传和下载</title>
+</head>
+<body>
+<section>
+    <section>
+        <h1>form 表单方式</h1>
+        <form method="POST" action="/api/uploadFile" enctype="multipart/form-data">
+            <p>file upload</p>
+            <span>picName:</span><input name="picName" type="text" /><br/>
+            <input name="file" type="file" /><br/><br/>
+            <button type="submit">submit</button>
+        </form>
+    </section>
+    <section>
+        <h1>formData 方式</h1>
+        <input id="J_file_type1" name="file" type="file" /><br/><br/>
+        <button id="J_btn_upload_type1">上传</button>
+    </section>
+</section>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script src="js/main.js" type="module"></script>
+</body>
+</html>

@@ -11,7 +11,7 @@ module.exports = {
     devtool: '#cheap-module-source-map',
     output: {
         path: path.resolve(__dirname, '../dist'),
-        publicPath: '/dist/',
+        publicPath: '/',
         filename: '[name]-[chunkhash].js'
     },
     resolve: {
@@ -24,12 +24,12 @@ module.exports = {
     module: {
         noParse: /es6-promise\.js$/,
         rules: [
-            {
-                test: /\.(js|vue)/,
-                use: 'eslint-loader',
-                enforce: 'pre',
-                exclude: /node_modules/
-            },
+            // {
+            //     test: /\.(js|vue)/,
+            //     use: 'eslint-loader',
+            //     enforce: 'pre',
+            //     exclude: /node_modules/
+            // },
             {
                 test: /\.vue$/,
                 use: {
