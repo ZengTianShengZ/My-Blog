@@ -31,3 +31,6 @@
   - 2017/08/15 [gulp-vsftppro 本地文件上传服务工具](https://www.npmjs.com/package/gulp-vsftppro)  
   - 2018/09/19 [znpm-cli 快速开发npm包脚手架](https://www.npmjs.com/package/znpm-cli)  
   
+
+#### | 活动页编辑器demo
+  - 2018/10/21 [活动页编辑器demo](https://zengtianshengz.github.io/My-Blog/%E6%B4%BB%E5%8A%A8%E7%BC%96%E8%BE%91%E5%99%A8demo/dist/)
