@@ -1,179 +1,280 @@
-ESLint是一个用来识别  ECMAScript  并且按照规则给出报告的代码检测工具，使用它可以避免低级错误和统一代码的风格
+#  eslint 配置 
 
-如何选取纯粹个人喜好，以下供参考
+无规矩不成方圆，项目一大，协作人员一多，就需要一套规则来约束各个开发人员的代码风格。不仅有利于 code review ，也能避免一些编程上的低级 bug。
 
-*  `no-alert`:  0,//禁止使用alert  confirm  prompt
-*  `no-array-constructor`:  2,//禁止使用数组构造器
-*  `no-bitwise`:  0,//禁止使用按位运算符
-*  `no-caller`:  1,//禁止使用arguments.caller或arguments.callee
-*  `no-catch-shadow`:  2,//禁止catch子句参数与外部作用域变量同名
-*  `no-class-assign`:  2,//禁止给类赋值
-*  `no-cond-assign`:  2,//禁止在条件表达式中使用赋值语句
-*  `no-console`:  2,//禁止使用console
-*  `no-const-assign`:  2,//禁止修改const声明的变量
-*  `no-constant-condition`:  2,//禁止在条件中使用常量表达式  if(true)  if(1)
-*  `no-continue`:  0,//禁止使用continue
-*  `no-control-regex`:  2,//禁止在正则表达式中使用控制字符
-*  `no-debugger`:  2,//禁止使用debugger
-*  `no-delete-var`:  2,//不能对var声明的变量使用delete操作符
-*  `no-div-regex`:  1,//不能使用看起来像除法的正则表达式/=foo/
-*  `no-dupe-keys`:  2,//在创建对象字面量时不允许键重复  {a:1,a:1}
-*  `no-dupe-args`:  2,//函数参数不能重复
-*  `no-duplicate-case`:  2,//switch中的case标签不能重复
-*  `no-else-return`:  2,//如果if语句里面有return,后面不能跟else语句
-*  `no-empty`:  2,//块语句中的内容不能为空
-*  `no-empty-character-class`:  2,//正则表达式中的[]内容不能为空
-*  `no-empty-label`:  2,//禁止使用空label
-*  `no-eq-null`:  2,//禁止对null使用==或!=运算符
-*  `no-eval`:  1,//禁止使用eval
-*  `no-ex-assign`:  2,//禁止给catch语句中的异常参数赋值
-*  `no-extend-native`:  2,//禁止扩展native对象
-*  `no-extra-bind`:  2,//禁止不必要的函数绑定
-*  `no-extra-boolean-cast`:  2,//禁止不必要的bool转换
-*  `no-extra-parens`:  2,//禁止非必要的括号
-*  `no-extra-semi`:  2,//禁止多余的冒号
-*  `no-fallthrough`:  1,//禁止switch穿透
-*  `no-floating-decimal`:  2,//禁止省略浮点数中的0  .5  3.
-*  `no-func-assign`:  2,//禁止重复的函数声明
-*  `no-implicit-coercion`:  1,//禁止隐式转换
-*  `no-implied-eval`:  2,//禁止使用隐式eval
-*  `no-inline-comments`:  0,//禁止行内备注
-*  `no-inner-declarations`:  [2,  `functions`],//禁止在块语句中使用声明（变量或函数）
-*  `no-invalid-regexp`:  2,//禁止无效的正则表达式
-*  `no-invalid-this`:  2,//禁止无效的this，只能用在构造器，类，对象字面量
-*  `no-irregular-whitespace`:  2,//不能有不规则的空格
-*  `no-iterator`:  2,//禁止使用__iterator__  属性
-*  `no-label-var`:  2,//label名不能与var声明的变量名相同
-*  `no-labels`:  2,//禁止标签声明
-*  `no-lone-blocks`:  2,//禁止不必要的嵌套块
-*  `no-lonely-if`:  2,//禁止else语句内只有if语句
-*  `no-loop-func`:  1,//禁止在循环中使用函数（如果没有引用外部变量不形成闭包就可以）
-*  `no-mixed-requires`:  [0,  false],//声明时不能混用声明类型
-*  `no-mixed-spaces-and-tabs`:  [2,  false],//禁止混用tab和空格
-*  `linebreak-style`:  [0,  `windows`],//换行风格
-*  `no-multi-spaces`:  1,//不能用多余的空格
-*  `no-multi-str`:  2,//字符串不能用\换行
-*  `no-multiple-empty-lines`:  [1,  {`max`:  2}],//空行最多不能超过2行
-*  `no-native-reassign`:  2,//不能重写native对象
-*  `no-negated-in-lhs`:  2,//in  操作符的左边不能有!
-*  `no-nested-ternary`:  0,//禁止使用嵌套的三目运算
-*  `no-new`:  1,//禁止在使用new构造一个实例后不赋值
-*  `no-new-func`:  1,//禁止使用new  Function
-*  `no-new-object`:  2,//禁止使用new  Object()
-*  `no-new-require`:  2,//禁止使用new  require
-*  `no-new-wrappers`:  2,//禁止使用new创建包装实例，new  String  new  Boolean  new  Number
-*  `no-obj-calls`:  2,//不能调用内置的全局对象，比如Math()  JSON()
-*  `no-octal`:  2,//禁止使用八进制数字
-*  `no-octal-escape`:  2,//禁止使用八进制转义序列
-*  `no-param-reassign`:  2,//禁止给参数重新赋值
-*  `no-path-concat`:  0,//node中不能使用__dirname或__filename做路径拼接
-*  `no-plusplus`:  0,//禁止使用++，--
-*  `no-process-env`:  0,//禁止使用process.env
-*  `no-process-exit`:  0,//禁止使用process.exit()
-*  `no-proto`:  2,//禁止使用__proto__属性
-*  `no-redeclare`:  2,//禁止重复声明变量
-*  `no-regex-spaces`:  2,//禁止在正则表达式字面量中使用多个空格  /foo  bar/
-*  `no-restricted-modules`: 0,//如果禁用了指定模块，使用就会报错
-* `no-return-assign`: 1,//return 语句中不能有赋值表达式
-* `no-script-url`: 0,//禁止使用javascript:void(0)
-* `no-self-compare`: 2,//不能比较自身
-* `no-sequences`: 0,//禁止使用逗号运算符
-* `no-shadow`: 2,//外部作用域中的变量不能与它所包含的作用域中的变量或参数同名
-* `no-shadow-restricted-names`: 2,//严格模式中规定的限制标识符不能作为声明时的变量名使用
-* `no-spaced-func`: 2,//函数调用时 函数名与()之间不能有空格
-* `no-sparse-arrays`: 2,//禁止稀疏数组， [1,,2]
-* `no-sync`: 0,//nodejs 禁止同步方法
-* `no-ternary`: 0,//禁止使用三目运算符
-* `no-trailing-spaces`: 1,//一行结束后面不要有空格
-* `no-this-before-super`: 0,//在调用super()之前不能使用this或super
-* `no-throw-literal`: 2,//禁止抛出字面量错误 throw `error`;
-* `no-undef`: 1,//不能有未定义的变量
-* `no-undef-init`: 2,//变量初始化时不能直接给它赋值为undefined
-* `no-undefined`: 2,//不能使用undefined
-* `no-unexpected-multiline`: 2,//避免多行表达式
-* `no-underscore-dangle`: 1,//标识符不能以_开头或结尾
-* `no-unneeded-ternary`: 2,//禁止不必要的嵌套 var isYes = answer === 1 ? true : false;
-* `no-unreachable`: 2,//不能有无法执行的代码
-* `no-unused-expressions`: 2,//禁止无用的表达式
-* `no-unused-vars`: [2, {`vars`: `all`, `args`: `after-used`}],//不能有声明后未被使用的变量或参数
-* `no-use-before-define`: 2,//未定义前不能使用
-* `no-useless-call`: 2,//禁止不必要的call和apply
-* `no-void`: 2,//禁用void操作符
-* `no-var`: 0,//禁用var，用let和const代替
-* `no-warning-comments`: [1, { `terms`: [`todo`, `fixme`, `xxx`], `location`: `start` }],//不能有警告备注
-* `no-with`: 2,//禁用with
+下面讲解在 vscode 下配置 eslint 和 tslint，让 vscode 自动帮我们格式化代码。
 
-* `array-bracket-spacing`: [2, `never`],//是否允许非空数组里面有多余的空格
-* `arrow-parens`: 0,//箭头函数用小括号括起来
-* `arrow-spacing`: 0,//=>的前/后括号
-* `accessor-pairs`: 0,//在对象中使用getter/setter
-* `block-scoped-var`: 0,//块语句中使用var
-* `brace-style`: [1, `1tbs`],//大括号风格
-* `callback-return`: 1,//避免多次调用回调什么的
-* `camelcase`: 2,//强制驼峰法命名
-* `comma-dangle`: [2, `never`],//对象字面量项尾不能有逗号
-* `comma-spacing`: 0,//逗号前后的空格
-* `comma-style`: [2, `last`],//逗号风格，换行时在行首还是行尾
-* `complexity`: [0, 11],//循环复杂度
-* `computed-property-spacing`: [0, `never`],//是否允许计算后的键名什么的
-* `consistent-return`: 0,//return 后面是否允许省略
-* `consistent-this`: [2, `that`],//this别名
-* `constructor-super`: 0,//非派生类不能调用super，派生类必须调用super
-* `curly`: [2, `all`],//必须使用 if(){} 中的{}
-* `default-case`: 2,//switch语句最后必须有default
-* `dot-location`: 0,//对象访问符的位置，换行的时候在行首还是行尾
-* `dot-notation`: [0, { `allowKeywords`: true }],//避免不必要的方括号
-* `eol-last`: 0,//文件以单一的换行符结束
-* `eqeqeq`: 2,//必须使用全等
-* `func-names`: 0,//函数表达式必须有名字
-* `func-style`: [0, `declaration`],//函数风格，规定只能使用函数声明/函数表达式
-* `generator-star-spacing`: 0,//生成器函数*的前后空格
-* `guard-for-in`: 0,//for in循环要用if语句过滤
-* `handle-callback-err`: 0,//nodejs 处理错误
-* `id-length`: 0,//变量名长度
-* `indent`: [2, 4],//缩进风格
-* `init-declarations`: 0,//声明时必须赋初值
-* `key-spacing`: [0, { `beforeColon`: false, `afterColon`: true }],//对象字面量中冒号的前后空格
-* `lines-around-comment`: 0,//行前/行后备注
-* `max-depth`: [0, 4],//嵌套块深度
-* `max-len`: [0, 80, 4],//字符串最大长度
-* `max-nested-callbacks`: [0, 2],//回调嵌套深度
-* `max-params`: [0, 3],//函数最多只能有3个参数
-* `max-statements`: [0, 10],//函数内最多有几个声明
-* `new-cap`: 2,//函数名首行大写必须使用new方式调用，首行小写必须用不带new方式调用
-* `new-parens`: 2,//new时必须加小括号
-* `newline-after-var`: 2,//变量声明后是否需要空一行
-* `object-curly-spacing`: [0, `never`],//大括号内是否允许不必要的空格
-* `object-shorthand`: 0,//强制对象字面量缩写语法
-* `one-var`: 1,//连续声明
-* `operator-assignment`: [0, `always`],//赋值运算符 += -=什么的
-* `operator-linebreak`: [2, `after`],//换行时运算符在行尾还是行首
-* `padded-blocks`: 0,//块语句内行首行尾是否要空行
-* `prefer-const`: 0,//首选const
-* `prefer-spread`: 0,//首选展开运算
-* `prefer-reflect`: 0,//首选Reflect的方法
-* `quotes`: [1, `single`],//引号类型 `` `` ''
-* `quote-props`:[2, `always`],//对象字面量中的属性名是否强制双引号
-* `radix`: 2,//parseInt必须指定第二个参数
-* `id-match`: 0,//命名检测
-* `require-yield`: 0,//生成器函数必须有yield
-* `semi`: [2, `always`],//语句强制分号结尾
-* `semi-spacing`: [0, {`before`: false, `after`: true}],//分号前后空格
-* `sort-vars`: 0,//变量声明时排序
-* `space-after-keywords`: [0, `always`],//关键字后面是否要空一格
-* `space-before-blocks`: [0, `always`],//不以新行开始的块{前面要不要有空格
-* `space-before-function-paren`: [0, `always`],//函数定义时括号前面要不要有空格
-* `space-in-parens`: [0, `never`],//小括号里面要不要有空格
-* `space-infix-ops`: 0,//中缀操作符周围要不要有空格
-* `space-return-throw-case`: 2,//return throw case后面要不要加空格
-* `space-unary-ops`: [0, { `words`: true, `nonwords`: false }],//一元运算符的前/后要不要加空格
-* `spaced-comment`: 0,//注释风格要不要有空格什么的
-* `strict`: 2,//使用严格模式
-* `use-isnan`: 2,//禁止比较时使用NaN，只能用isNaN()
-* `valid-jsdoc`: 0,//jsdoc规则
-* `valid-typeof`: 2,//必须使用合法的typeof的值
-* `vars-on-top`: 2,//var必须放在作用域顶部
-* `wrap-iife`: [2, `inside`],//立即执行函数表达式的小括号风格
-* `wrap-regex`: 0,//正则表达式字面量用小括号包起来
-* `yoda`: [2, `never`]//禁止尤达条件
-* ...
+### eslint
+
+ESLint是一个开源JavaScript linting实用程序，最初由Nicholas C. Zakas于2013年6月创建。代码linting是一种静态分析，经常用于查找不符合某些样式指南的有问题的模式或代码。JavaScript 是动态类型语言，需要在运行时才能知道语法错误，而 ESLint 能对 JavaScript 做静态分析，在不运行 JavaScript 的情况下分析出代码问题。
+
+#### 开始
+
+首先需要装 eslint ，可装在全局或当前工程目录下。
+
+```
+npm i -g eslint
+```
+
+配置一个独立的 .eslintrc.* 文件，或者直接在 package.json 文件里的 eslintConfig 字段指定配置，ESLint 会查找和自动读取它们，再者，你可以在命令行运行时指定一个任意的配置文件。
+
+一般我们在当前工程下建个 .eslintrc.js 配置文件， 如下：
+
+```
+├──  .eslintrc.js   
+├──  app.js 
+```
+
+其中 app.js 我们简单写个脚本
+
+```
+let bar = 'bar'
+
+if (bar == 'baz') {
+  //...
+}
+```
+
+接着试着在控制台运行 eslint : `eslint app.js`
+
+不出意外的话，我们控制台会报以下错误：
+
+```
+1:5  error  Parsing error: Unexpected token bar
+✖ 1 problem (1 error, 0 warnings)
+```
+
+我们 .eslintrc.js  啥规则都没配，为啥就报错了呢？那是默认情况下，ESLint 支持 ECMAScript 5 语法。而我们 app.js 用到了ES6的语法，所以报错了。
+
+接着我们就来详解 .eslintrc.js 的具体配置，来满足我们想要的语法校验规则
+
+
+#### .eslintrc.js 配置
+
+基本配置项：
+
+```
+module.exports = {
+  "parserOptions": {  
+  },
+  "parser": "",
+  "env": {},
+  "globals": {},
+  "plugins": [],
+  "rules": {},
+  "settings": {},
+  "extends": "",
+}
+```
+
+##### 1、parserOptions
+
+```
+"parserOptions": {
+  "ecmaVersion": 6, // 默认设置为3，5（默认）， 你可以使用 6、7、8 或 9 来指定你想要使用的 ECMAScript 版本。
+  "sourceType": "module", // 设置为 "script" (默认) 或 "module"（如果你的代码是 ECMAScript 模块)
+  "ecmaFeatures": { // 这是个对象，表示你想使用的额外的语言特性
+      "jsx": true
+  }
+}
+```
+
+一般我们对这项使用的配置为：
+
+```
+"parserOptions": {
+  "sourceType": "module"
+}
+```
+
+##### 2、parser
+
+指定 Eslint 的解析器，默认的解析器是 esprima ，我们可以自己指定不同的解析器，如 babel-eslint ，@typescript-eslint/parser 。
+注意解析器是一个 npm module，使用指定的解析器时，我们本地需要 install 对应的 module 。如：
+
+```
+// npm i babel-eslint -D
+"parser": "babel-eslint"
+```
+
+这时我们的 .eslintrc.js 配置如下：
+
+```
+module.exports = {
+  "parserOptions": {  
+    "sourceType": "module"
+  },
+  "parser": "babel-eslint"
+}
+```
+我们再次运行 `eslint app.js` 发现控制台不会报错了，因为我们配置了对应的解析器，babel-eslint 支持了 es6的解析，所以不会报错了。
+
+##### 3、env
+
+一个环境定义了一组预定义的全局变量。一般用到的有
+
+```
+"env": {
+  "browser": true,
+  "node": true,
+  "jest": true,
+  "amd": true
+}
+```
+
+##### 4、globals
+
+当访问当前源文件内未定义的变量时，no-undef 规则将发出警告。则可通过 globals 配置
+
+```
+"globals": {
+  "var1": true, // true 将允许变量被重写
+  "var2": false // 或 false 将不允许被重写
+}
+```
+
+##### 5、plugins
+
+Eslint 默认只支持 .js 文件的检查，校验其他类型文件需要装载对应的 plugins ，如 eslint-plugin-html， eslint-plugin-vue， eslint-plugin-react 。
+
+```
+"plugins": [
+  "html", // 可省略 eslint-plugin-
+  "vue"
+]
+```
+但有一点需要注意的是，由于 Node.js 的 require 函数的行为，ESLint 加载 plugins 只相对于 ESlint 所在的 module 路径，所以如果刚才 ESLint 是全局安装，对应加载的路径也需要全局。或者把 ESLint 和 plugin 都装在本地。
+
+
+##### 6、rules
+
+rules 这个配置项就不陌生了，我们可以在这个配置项添加我们想要的配置规则，这里有一份官方的规则列表 [eslint-rules](http://eslint.cn/docs/rules/) ，下面我给出一份简单的我在项目中常用的规则列表：
+
+```
+rules: {
+  semi: [2, 'always'],
+  // http://eslint.org/docs/rules
+  quotes: [2, 'single', 'avoid-escape'],
+  // http://eslint.org/docs/rules/no-unused-vars
+  'no-unused-vars': [
+      1, { vars: 'local', args: 'after-used' }
+  ],
+  'eol-last': 1,
+  'no-debugger': 1,
+  'padded-blocks': 1,
+  'brace-style': [2, 'stroustrup'],
+  'comma-dangle': [2, 'only-multiline'],
+  'space-before-function-paren': [2, 'never'],
+  'no-multiple-empty-lines': [2, { max: 3 }],
+  'keyword-spacing': [
+      2, {
+          before: true,
+          after: true,
+          overrides: {
+              'catch': {
+                  after: false
+              },
+              'for': {
+                  after: false
+              },
+              'if': {
+                  after: false
+              },
+              'while': {
+                  after: false
+              }
+          }
+      }
+  ],
+  indent: [2, 2, {
+      MemberExpression: 0
+  }],
+  eqeqeq: 2,
+  curly: 1
+}
+```
+
+校验规则非常多，大家可对照文档配置
+
+比如这条：
+```
+// 是否在代码中存在 console
+// "off" 或 0 - 关闭规则
+// "warn" 或 1 - 开启规则
+// "error" 或 2 - 开启规则
+
+"no-console": "warn"
+```
+
+有比如：
+
+```
+// 使用单引号，错误级别为 error 
+quotes: [2, 'single', 'avoid-escape'],
+```
+
+更多规则查看官方文档 [eslint-rules](http://eslint.cn/docs/rules/)
+
+
+##### 6、settings
+
+共享配置，比如我们上面装了一个 eslint-plugin-html 插件，作用于 html ，我们可以使用 settings ，将插件也作用于不同的文件，比如：
+
+```
+settings: {
+  'html/html-extensions': ['.html', '.vue'] // 作用于 .html 和 .vue
+}
+```
+
+##### 7、extends
+
+继承，扩展。我们可以对原有的规则进行扩展，比如：
+
+```
+extends: 'standard',
+rules: {
+  //...
+}
+```
+
+我们在 standard 的基础上扩展我们自己的 rules 规则。 standard 是 eslint 的基础配置
+
+
+#### 结合 vscode 进行代码校验提醒
+
+上面虽然配置了 eslint 规则，但每次我们都需要执行 `eslint app.js` 手动校验，检验完再做修改，难免太麻烦。好在我们有 vscode 可以帮我们执行校验，并做代码提醒，我们只需要做简单配置，就可以边写代码，边做eslint校验了，而且还能在保存代码的时候顺便帮我们按照校验规则格式化代码，大大提高了编程效率。
+
+让 vscode 自动帮我们做代码校验和格式化，我们需要扩展 vscode 插件，并做相应配置
+
+![img](./img/img1.png)
+
+安装 ESLint 插件，并在 vscode 的 settings.json 做如下配置
+
+```
+"eslint.options": {"configFile": ""},
+"eslint.autoFixOnSave": true,
+"eslint.validate": [
+  "javascript",
+  "javascriptreact",
+  "html",
+  {
+    "language": "vue",
+    "autoFix": true
+  }
+],
+```
+
+其中 autoFixOnSave 开发保存自动格式化代码，validate 及校验对应文件类型。
+
+重启 vscode ，这时 vscode 代码就可以有错误信息提示了
+
+![img](./img/img2.png)
+
+编辑保存代码后就会按 rules 自动格式化代码并修复 bug
+
+![img](./img/img3.png)
+
+
+### 小结
+
+工欲善其事，必先利其器，一份好用 eslin 配置能让你的代码更加工整规范，也有助于项目的协作开发。
