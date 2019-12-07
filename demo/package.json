@@ -1,0 +1,79 @@
+{
+  "name": "ssr-demo3",
+  "version": "1.0.0",
+  "description": "vue-ssr",
+  "main": "server.js",
+  "repository": {},
+  "author": "zeromake",
+  "license": "MIT",
+  "scripts": {
+    "dev": "node server",
+    "start": "cross-env NODE_ENV=production node server",
+    "build:client": "cross-env NODE_ENV=production webpack --config build/webpack.client.config.js --progress --hide-modules",
+    "build:server": "cross-env NODE_ENV=production webpack --config build/webpack.server.config.js --progress --hide-modules"
+  },
+  "dependencies": {
+    "axios": "^0.16.2",
+    "cross-env": "^4.0.0",
+    "es6-promise": "^4.1.0",
+    "koa": "^2.2.0",
+    "koa-router": "7.1.1",
+    "koa-send": "^4.1.0",
+    "koa-webpack-middleware-zm": "^0.0.4",
+    "lru-cache": "^4.0.2",
+    "node-fetch": "^1.6.3",
+    "schema-utils": "^0.4.5",
+    "serialize-javascript": "^1.3.0",
+    "vue": "^2.3.3",
+    "vue-router": "^2.5.3",
+    "vue-server-renderer": "^2.3.3",
+    "vuex": "^2.3.1",
+    "vuex-router-sync": "^4.1.2"
+  },
+  "devDependencies": {
+    "autoprefixer": "^7.0.1",
+    "babel-core": "^6.24.1",
+    "babel-eslint": "^7.2.3",
+    "babel-loader": "^7.0.0",
+    "babel-plugin-syntax-dynamic-import": "^6.18.0",
+    "babel-preset-env": "^1.4.0",
+    "co": "^4.6.0",
+    "css-loader": "^0.28.1",
+    "cz-conventional-changelog": "^2.0.0",
+    "eslint": "^3.19.0",
+    "eslint-config-vue": "^2.0.2",
+    "eslint-loader": "^1.7.1",
+    "eslint-plugin-vue": "^2.0.1",
+    "extract-text-webpack-plugin": "^2.1.0",
+    "file-loader": "^0.11.1",
+    "format-webpack-stats-errors-warnings": "^2.1.0",
+    "friendly-errors-webpack-plugin": "^1.6.1",
+    "fs-extra": "^3.0.1",
+    "ghooks": "^2.0.0",
+    "html-minifier": "^3.4.4",
+    "html-webpack-plugin": "^2.28.0",
+    "koa-static": "^4.0.2",
+    "rimraf": "^2.6.1",
+    "source-list-map": "^2.0.0",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.1",
+    "sw-precache-webpack-plugin": "^0.11.0",
+    "url-loader": "^0.5.8",
+    "validate-commit-msg": "^2.12.1",
+    "vue-loader": "^12.0.3",
+    "vue-template-compiler": "^2.3.3",
+    "webpack": "^2.5.1",
+    "webpack-dev-middleware": "^1.10.2",
+    "webpack-hot-middleware": "^2.18.0",
+    "webpack-merge": "^4.1.0",
+    "webpack-node-externals": "^1.5.4"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    },
+    "ghooks": {
+      "commit-msg": "validate-commit-msg"
+    }
+  }
+}
